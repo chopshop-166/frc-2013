@@ -2,7 +2,7 @@
 *  Project   		: Framework
 *  File Name  		: Defines.h    
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
+*  Creation Date	: January 18, 2012
 *  File Description	: Robot code header which contains defines for global usage
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
@@ -39,6 +39,15 @@
 
 //Frisbee eject trigger
 #define JOY_COPILOT_EJECT ("joy3b1")
+
+//Defines The Speeds Used During Autonomous
+#define ALIGNMENT_SPEED (.2)
+#define AUTO_SPEED (.4)
+#define AUTO_SPEED_ALIGN (.6)
+
+//Sensor Values For Autonomous
+#define DUMP_DISTANCE (6)//This is the distance to the wall that we need to be to dump into the goal
+#define FRONT_DISTANCE ("1")//how far we are from the wall(distance sensor/camera)
 
 // Place any #defines for things you want to enable in multiple tasks, simply, here
 

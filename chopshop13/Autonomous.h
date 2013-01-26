@@ -1,8 +1,8 @@
 /*******************************************************************************
-*  Project   		: Framework
+*  Project   		: ChopShop 13
 *  File Name  		: Autonomous.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
+*  Creation Date	: January 26, 2013
 *  File Description	: Header for robot code to execute in autonomous mode
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
@@ -22,6 +22,7 @@ class AutonomousTask
 {
 public:
 	AutonomousTask(void);
-	// <<CHANGEME>>
-	// Add any extra functions your autonomous needs
+	enum {INIT,ALIGNING,DRIVE,DUMP} state;
+	float OffsetValue;
+	float FrontDistance;
 };
