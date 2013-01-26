@@ -88,12 +88,12 @@ unsigned int DriveLog::DumpBuffer(char *nptr, FILE *ofile)
 
 // task constructor
 Drive::Drive(void): 
-	motorL1(motorL1ID),
-	motorL2(motorL2ID),
-	motorL3(motorL3ID),
-	motorR1(motorR1ID),
-	motorR2(motorR2ID),
-	motorR3(motorR3ID)
+	motorL1(MOTOR_L1_ID),
+	motorL2(MOTOR_L2_ID),
+	motorL3(MOTOR_L3_ID),
+	motorR1(MOTOR_R1_ID),
+	motorR2(MOTOR_R2_ID),
+	motorR3(MOTOR_R3_ID)
 {
 	Start((char *)"166TemplateTask", TEMPLATE_CYCLE_TIME);
 	// ^^^ Rename those ^^^ 
@@ -130,8 +130,8 @@ int Drive::Main(int a2, int a3, int a4, int a5,
 	float joyrighty;
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-		joylefty = proxy->get(joyleft_y);
-		joyrighty = proxy->get(joyright_y);
+		joylefty = proxy->get(JOY_LEFT_Y);
+		joyrighty = proxy->get(JOY_RIGHT_Y);
 		
 		
 		motorL1.Set(joylefty);
