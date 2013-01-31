@@ -44,13 +44,14 @@
 #define JOY_COPILOT_EJECT ("joy3b1")
 
 //Defines The Speeds Used During Autonomous
-#define ALIGNMENT_SPEED (.2)
+#define ALIGN_SPEED_CONST (.2)
 #define AUTO_SPEED (.4)
-#define AUTO_SPEED_ALIGN (.6)
+#define ALIGNMENT_SPEED (.6)
+#define DEAD_LEFT (1)
+#define DEAD_RIGHT (-1)
 
 //Sensor Values For Autonomous
 #define DUMP_DISTANCE (6)//This is the distance to the wall that we need to be to dump into the goal
-#define FRONT_DISTANCE ("1")//how far we are from the wall(distance sensor/camera)
 
 // Place any #defines for things you want to enable in multiple tasks, simply, here
 

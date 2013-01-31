@@ -32,38 +32,47 @@ AutonomousTask::AutonomousTask() {
 	
 	while( lHandle->IsAutonomous() ) {
  switch(state){
-           case INIT:
-        	   lHandle->DriverStationDisplay("We are Initializing");  
-               OffsetValue = proxy->get ("TargetOffset");
-        	   state = ALIGNING;
-        	   break;
-           case ALIGNING:
-        	   while(OffsetValue =! 0){
-        	   if(OffsetValue > 0){
-        		   proxy->set(JOY_RIGHT_Y,ALIGNMENT_SPEED);}
-        	   if(OffsetValue < 0){
-        		   proxy->set(JOY_LEFT_Y,ALIGNMENT_SPEED);}}
-        	   state = DRIVE;
-        	   break;
-           case DRIVE:
-        	   FrontDistance = proxy->get (FRONT_DISTANCE);
-        	   OffsetValue = proxy->get ("TargetOffset");
-        	   if (FrontDistance > DUMP_DISTANCE){
-        		   if(OffsetValue > 0){
-        			   proxy->set(JOY_LEFT_Y, AUTO_SPEED);
-        			   proxy->set(JOY_RIGHT_Y,AUTO_SPEED_ALIGN);}
-        		   if(OffsetValue < 0){
-        			   proxy->set(JOY_LEFT_Y, AUTO_SPEED_ALIGN);
-        			   proxy->set(JOY_RIGHT_Y,AUTO_SPEED);}
-        		   }
-        	   if(OffsetValue = 0){
-        		   proxy->set(JOY_LEFT_Y, AUTO_SPEED);
-        	   	   proxy->set(JOY_RIGHT_Y,AUTO_SPEED);}
- 	 	 	   state = DUMP;
- 	 	 	   break;
- 	 	   case DUMP:
- 	 		   proxy->set(JOY_COPILOT_EJECT,1);
- 	 		   break;
+	           case INIT: //initializes autonomous
+	        	   lHandle->DriverStationDisplay("We are Initializing");  
+	               OffsetValue = proxy->get ("TargetOffset");
+	        	   state = ALIGNING;
+	        	   break;
+	        	   
+	           case ALIGNING: //points the robot towards the goal using an offset provided by the camera
+	        	   while(OffsetValue =! 0 && proxy->get("Valid_Image") == 1){
+		        	   if(OffsetValue > 0){ // If the goal is to the left, turn left.
+		        		   proxy->set(JOY_RIGHT_Y, ALIGNMENT_SPEED);}
+		        	   if(OffsetValue < 0){ // If the goal is to the right, turn right.
+		        		   proxy->set(JOY_LEFT_Y, ALIGNMENT_SPEED);}}
+	        	   state = DRIVE;
+	        	   break;
+	        	   
+	           case DRIVE: //drives the robot towards the goal, while still aligning
+	        	   FrontDistance = proxy->get("FrontDistance");
+	        	   while(proxy->get("Valid_Image") == 1){
+		        	   while (FrontDistance > DUMP_DISTANCE){
+		        		   FrontDistance = proxy->get ("FrontDistance");
+		        		   OffsetValue = proxy->get ("TargetOffset");
+		        		   AlignSpeed = OffsetValue * ALIGN_SPEED_CONST + AUTO_SPEED; //Speed the robot aligns at, proportional
+		        		   
+		        		   if(OffsetValue > DEAD_LEFT){ //If the robot is straying to the right, make right wheels faster.
+		        			   proxy->set(JOY_LEFT_Y, AUTO_SPEED);
+		        			   proxy->set(JOY_RIGHT_Y, AlignSpeed);}
+		        		   if(OffsetValue < DEAD_RIGHT){ //If the robot is straying towards the left, make the left wheels faster.
+		        			   proxy->set(JOY_LEFT_Y, AlignSpeed);
+		        			   proxy->set(JOY_RIGHT_Y, AUTO_SPEED);}		   
+		        		   if(OffsetValue < DEAD_LEFT && OffsetValue > DEAD_RIGHT){ //If the robot is going straight toward the goal, move straight.
+			        		   proxy->set(JOY_LEFT_Y, AUTO_SPEED);
+			        	   	   proxy->set(JOY_RIGHT_Y, AUTO_SPEED);}
+		        		   }
+		        	   proxy->set(JOY_LEFT_Y, 0); //Stops robot
+		        	   proxy->set(JOY_RIGHT_Y, 0); //Stops robot   
+		 	 	 	   state = DUMP;} 
+	 	 	 	   break;
+	 	 	 	   
+	 	 	   case DUMP: //when at the proper distance, activate dump button
+	 	 		   proxy->set(JOY_COPILOT_EJECT,1);
+	 	 		   break;
 	}
         	   
 
