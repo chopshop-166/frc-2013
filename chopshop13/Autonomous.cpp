@@ -55,10 +55,10 @@ AutonomousTask::AutonomousTask() {
 		        		   OffsetValue = proxy->get ("TargetOffset");
 		        		   AlignSpeed = OffsetValue * ALIGN_SPEED_CONST + AUTO_SPEED; //Speed the robot aligns at, proportional
 		        		   
-		        		   if(OffsetValue > DEAD_LEFT){ //If the robot is straying to the right, make right wheels faster.
+		        		   if(OffsetValue < DEAD_LEFT){ //If the robot is straying to the right, make right wheels faster.
 		        			   proxy->set(JOY_LEFT_Y, AUTO_SPEED);
 		        			   proxy->set(JOY_RIGHT_Y, AlignSpeed);}
-		        		   if(OffsetValue < DEAD_RIGHT){ //If the robot is straying towards the left, make the left wheels faster.
+		        		   if(OffsetValue > DEAD_RIGHT){ //If the robot is straying towards the left, make the left wheels faster.
 		        			   proxy->set(JOY_LEFT_Y, AlignSpeed);
 		        			   proxy->set(JOY_RIGHT_Y, AUTO_SPEED);}		   
 		        		   if(OffsetValue < DEAD_LEFT && OffsetValue > DEAD_RIGHT){ //If the robot is going straight toward the goal, move straight.
