@@ -21,6 +21,9 @@
 #define MOTOR_R2_ID (5)
 #define MOTOR_R3_ID (6)
 
+//Define Dumper motors
+#define MOTOR_DUMPER_A (7)
+#define MOTOR_DUMPER_B (8)
 
 //Define drive joysticks
 #define JOY_LEFT_Y  ("joy1y")
