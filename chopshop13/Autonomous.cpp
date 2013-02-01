@@ -40,10 +40,23 @@ AutonomousTask::AutonomousTask() {
 	        	   
 	           case ALIGNING: //points the robot towards the goal using an offset provided by the camera
 	        	   while(OffsetValue =! 0 && proxy->get("Valid_Image") == 1){
-		        	   if(OffsetValue > 0){ // If the goal is to the left, turn left.
+		        	  OffsetValueAlign = proxy->get("TargetOffset");
+		        	  AlignSpeedAlign = OffsetValueAlign * ALIGN_SPEED_CONST + AUTO_SPEED;
+		        	  if (OffsetValue > DEAD_LEFT){
+		        	      proxy->set(JOY_LEFT_Y,AUTO_SPEED);
+		        	      proxy->set(JOY_RIGHT_Y,AlignSpeedAlign);}
+		        	  if(OffsetValue < DEAD_RIGHT){ //If the robot is straying towards the left, make the left wheels faster.
+		        	  	  proxy->set(JOY_LEFT_Y, AlignSpeedAlign);
+		        	  	  proxy->set(JOY_RIGHT_Y, AUTO_SPEED);}		   
+		        	  if(OffsetValue < DEAD_LEFT && OffsetValue > DEAD_RIGHT){ //If the robot is going straight toward the goal, move straight.
+		        	  	  proxy->set(JOY_LEFT_Y, AUTO_SPEED);
+		        	  	  proxy->set(JOY_RIGHT_Y, AUTO_SPEED);}  
+		        	  }
+		        	  
+	        		   /*if(OffsetValue > 0){ // If the goal is to the left, turn left.
 		        		   proxy->set(JOY_RIGHT_Y, ALIGNMENT_SPEED);}
 		        	   if(OffsetValue < 0){ // If the goal is to the right, turn right.
-		        		   proxy->set(JOY_LEFT_Y, ALIGNMENT_SPEED);}}
+		        		   proxy->set(JOY_LEFT_Y, ALIGNMENT_SPEED);}}*/
 	        	   state = DRIVE;
 	        	   break;
 	        	   
