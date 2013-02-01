@@ -34,13 +34,13 @@ AutonomousTask::AutonomousTask() {
  switch(state){
 	           case INIT: //initializes autonomous
 	        	   lHandle->DriverStationDisplay("We are Initializing");  
-	               OffsetValue = proxy->get ("TargetOffset");
+	               OffsetValue = proxy->get ("TARGETOFFSET");
 	        	   state = ALIGNING;
 	        	   break;
 	        	   
 	           case ALIGNING: //points the robot towards the goal using an offset provided by the camera
-	        	   while(OffsetValue =! 0 && proxy->get("Valid_Image") == 1){
-		        	  OffsetValueAlign = proxy->get("TargetOffset");
+	        	   while(OffsetValue =! 0 && proxy->get("VALID_IMAGE") == 1){
+		        	  OffsetValueAlign = proxy->get("TARGETOFFSET");
 		        	  AlignSpeedAlign = OffsetValueAlign * ALIGN_SPEED_CONST + AUTO_SPEED;
 		        	  if (OffsetValue > DEAD_LEFT){
 		        	      proxy->set(JOY_LEFT_Y,AUTO_SPEED);
@@ -62,10 +62,10 @@ AutonomousTask::AutonomousTask() {
 	        	   
 	           case DRIVE: //drives the robot towards the goal, while still aligning
 	        	   FrontDistance = proxy->get("FrontDistance");
-	        	   while(proxy->get("Valid_Image") == 1){
+	        	   while(proxy->get("VALID_IMAGE") == 1){
 		        	   while (FrontDistance > DUMP_DISTANCE){
 		        		   FrontDistance = proxy->get ("FrontDistance");
-		        		   OffsetValue = proxy->get ("TargetOffset");
+		        		   OffsetValue = proxy->get ("TARGETOFFSET");
 		        		   AlignSpeed = OffsetValue * ALIGN_SPEED_CONST + AUTO_SPEED; //Speed the robot aligns at, proportional
 		        		   
 		        		   if(OffsetValue > DEAD_LEFT){ //If the robot is straying to the right, make right wheels faster.
