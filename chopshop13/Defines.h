@@ -21,10 +21,16 @@
 #define MOTOR_R2_ID (5)
 #define MOTOR_R3_ID (6)
 
+//Define Dumper motors
+#define MOTOR_DUMPER_A (7)
+#define MOTOR_DUMPER_B (8)
 
 //Define drive joysticks
 #define JOY_LEFT_Y  ("joy1y")
-#define JOY_RIGHT_Y ("joy2y")
+//#define JOY_RIGHT_Y ("joy2y")
+
+//Define for Xbox
+#define JOY_RIGHT_Y ("joy1A5")
 
 //Engage Clutch
 #define JOY_LEFT_ENGAGE ("joy1b3")
@@ -41,13 +47,14 @@
 #define JOY_COPILOT_EJECT ("joy3b1")
 
 //Defines The Speeds Used During Autonomous
-#define ALIGNMENT_SPEED (.2)
+#define ALIGN_SPEED_CONST (.2)
 #define AUTO_SPEED (.4)
-#define AUTO_SPEED_ALIGN (.6)
+#define ALIGNMENT_SPEED (.6)
+#define DEAD_LEFT (1)
+#define DEAD_RIGHT (-1)
 
 //Sensor Values For Autonomous
 #define DUMP_DISTANCE (6)//This is the distance to the wall that we need to be to dump into the goal
-#define FRONT_DISTANCE ("1")//how far we are from the wall(distance sensor/camera)
 
 // Place any #defines for things you want to enable in multiple tasks, simply, here
 

@@ -53,7 +53,8 @@ Robot::Robot(void)
 
 	// update DS
 	DriverStationDisplay("Starting Robot");
-	
+	compress= new Compressor(2,4);
+	compress->Start();
 	// Setup expiration for task watchdog.
 	GetWatchdog().SetExpiration(5.0); // 5 seconds
 
