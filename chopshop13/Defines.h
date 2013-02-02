@@ -27,7 +27,10 @@
 
 //Define drive joysticks
 #define JOY_LEFT_Y  ("joy1y")
-#define JOY_RIGHT_Y ("joy2y")
+//#define JOY_RIGHT_Y ("joy2y")
+
+//Define for Xbox
+#define JOY_RIGHT_Y ("joy1A5")
 
 //Engage Clutch
 #define JOY_LEFT_ENGAGE ("joy1b3")
