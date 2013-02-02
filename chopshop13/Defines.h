@@ -25,5 +25,8 @@
 #define motorR2ID (5)
 #define motorR3ID (6)
 
+
+#define INCLINOMETER_A ()
+#define INCLINOMETER_B ()
 // Place any #defines for things you want to enable in multiple tasks, simply, here
 
