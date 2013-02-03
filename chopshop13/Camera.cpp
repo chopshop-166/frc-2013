@@ -138,6 +138,11 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 	float ar = 0;
 	proxy->add("VALID_IMAGE");
 	proxy->add("TARGETOFFSET");
+	TARGET_HEIGHT = 0;
+	TARGET_WIDTH = 0;
+	ParticleAnalysisReport *target;
+	
+	particle_id = 0;
 	
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
@@ -167,35 +172,40 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 		
 		
 		for (unsigned i = 0; i < reports->size(); i++) {
-			ParticleAnalysisReport *r = &(reports->at(i));
-			
-			//REPLACE THIS LINE WITH CORRECT ASPECT RATIO AQUISITION/// Then uncomment if statement//
-			//ar = (r->image_Width)/(r->image_Height);
-			
-			
-			//if ((ar > .5) && (ar < 2)
-			{
-				if (i > 0)
+				ParticleAnalysisReport *r = &(reports->at(i));
+				TARGET_HEIGHT = float(r->boundingRect.height);
+				TARGET_WIDTH = float(r->boundingRect.width);
+				ar = TARGET_WIDTH / TARGET_HEIGHT;
+				if ((ar > .5) && (ar < 2.0))
 				{
-					ParticleAnalysisReport *last = &(reports->at(i - 1));
-					if (r->center_mass_y > last->center_mass_y)
+					if (entered_loop == 1)
 					{
-						ParticleAnalysisReport *target = &(reports->at(i));
+						if (r->center_mass_y > target->center_mass_y)
+						{
+							target = &(reports->at(i));
+							particle_id = i;
+						}
 					}
+					else
+					{
+						target = &(reports->at(i));
+						particle_id = i;
+						entered_loop = 1;
+					}
+				
 				}
-				else
-				{
-					ParticleAnalysisReport *target = &(reports->at(0));
-				}
+				printf("particle: %d  (%d,%d)\n", i, r->center_mass_x, r->center_mass_y);
+				
 			}
+				
 			
-			printf("particle: %d  (%d,%d) Rotation: %f\n", i, r->center_mass_x, r->center_mass_y,TARGET_OFFSET);
-			
-		}
-			
-			if (reports->size() > 0)
+			if ((reports->size() > 0) && (entered_loop == 1))
 			{
-				printf("PARTICLE CHOSEN: %d   HEIGHT: %d", *target,target->center_mass_y);
+				TARGET_OFFSET =(target->center_mass_x - 160) / 160.0;
+				TARGET_HEIGHT = float(target->boundingRect.height);
+				TARGET_WIDTH = float(target->boundingRect.width);
+				ar = TARGET_WIDTH / TARGET_HEIGHT;
+				printf("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\n", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
 				TARGET_OFFSET =(target->center_mass_x - 160) / 160.0;
 				VALID_IMAGE = 1;
 				proxy->set("VALID_IMAGE",VALID_IMAGE);
@@ -205,6 +215,8 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 			}
 			else
 			{
+				VALID_IMAGE = 0;
+				proxy->set("VALID_IMAGE",VALID_IMAGE);
 				printf("DANGER WILL ROBINSON!DANGER!");
 			}
 			
