@@ -89,7 +89,7 @@ unsigned int TimmyLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Timmy166::Timmy166(void):LittleArm(TIMID),LimitA(LIMIT_A),LimitB(LIMIT_B)
+Timmy166::Timmy166(void):LittleArm(TIM_ID),LimitA(INCLINER_LIMIT_A),LimitB(INCLINER_LIMIT_B)
 {
 	Start((char *)"166TimmyTask", Timmy_CYCLE_TIME);
 	// ^^^ Rename those ^^^

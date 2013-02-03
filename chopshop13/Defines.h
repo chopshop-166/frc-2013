@@ -11,7 +11,10 @@
 
 #pragma once
 
-#define joytim_y ("joy3y")			//TIM's joystick control
+/////////////////
+//Motor Defines//
+/////////////////
+
 //define left motors
 #define MOTOR_L1_ID (1)
 #define MOTOR_L2_ID (2)
@@ -24,7 +27,13 @@
 
 //Define Dumper motors
 #define MOTOR_DUMPER_A (7)
-#define MOTOR_DUMPER_B (8)
+
+//Define Inclination managment motor
+#define TIM_ID (8)
+
+////////////////////
+//JOYSTICK DEFINES//
+////////////////////
 
 //Define drive joysticks
 #define JOY_LEFT_Y  ("joy1y")
@@ -41,11 +50,59 @@
 #define JOY_LEFT_INCLINE ("joy1b4")
 #define JOY_RIGHT_INCLINE ("joy2b4")
 
-//Control Rotation of dumper system
-#define JOY_COPILOT_DUMP ("joy3y")
+//Control Rotation of dumper system	
+#define JOY_COPILOT_DUMP ("joy3b1")
 
 //Frisbee eject trigger
-#define JOY_COPILOT_EJECT ("joy3b1")
+#define JOY_COPILOT_EJECT ("joy3b2")
+
+//TIM's joystick control
+#define joytim_y ("joy4y")
+
+
+/////////////////
+//ANALOG INPUTS//
+/////////////////
+
+//Define Sonar Sensor
+#define SONAR_INPUT (1)
+
+//Define 
+
+
+//////////////////
+//DIGITAL INPUTS//
+//////////////////
+
+//Define Inclinometer Inputs
+#define INCLINOMETER_A (1)
+#define INCLINOMETER_B (2)
+
+// Define Dumper Inputs
+#define DUMPER_LIMIT (3)
+
+//Define pressure switch
+#define PRESSURE_SWITCH (4)
+
+//Define Incliner limit switches
+#define INCLINER_LIMIT_A	(12)
+#define INCLINER_LIMIT_B	(13)
+
+
+////////////////
+//RELAY OUTPUT//
+////////////////
+
+//Define Compressor relay
+#define COMPRESSOR_RELAY (1)
+
+/////////////////////////
+//TASK SPECIFIC DEFINES//
+/////////////////////////
+
+//Defines for TIM task
+#define TIM_ANGLE (60)
+#define TIMMY_SPEED (.3)
 
 //Defines The Speeds Used During Autonomous
 #define ALIGN_SPEED_CONST (.2)
@@ -55,16 +112,7 @@
 #define DEAD_RIGHT (-1)
 
 //Sensor Values For Autonomous
-#define DUMP_DISTANCE (6)//This is the distance to the wall that we need to be to dump into the goal
+#define DUMP_DISTANCE (6) //This is the distance to the wall that we need to be to dump into the goal
 
-//define TIM related things
-#define TIMID (9)	//TIM's victor ID
-#define INCLINOMETER_A (1)
-#define INCLINOMETER_B (2)
-#define TIM_ANGLE (60)
-#define TIMMY_SPEED (.3)	//what we want timmyspeed to =
 
-#define LIMIT_A	(12)
-#define LIMIT_B	(13)
-// Place any #defines for things you want to enable in multiple tasks, simply, here
 
