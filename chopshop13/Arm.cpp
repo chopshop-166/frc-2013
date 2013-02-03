@@ -1,22 +1,22 @@
 /*******************************************************************************
-*  Project   		: ChopShop13
-*  File Name  		: Inclinometer.cpp     
+*  Project   		: Framework
+*  File Name  		: Arm.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 18, 2010
-*  File Description	: Template source file for tasks, with template functions
+*  File Description	: Arm source file for tasks, with Arm functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
 /*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------*/
-/* Find & Replace "Incline" with the name you would like to give this task     */
-/* Find & Replace "Testing" with the name you would like to give this task      */
-/* Find & Replace "Inclinometer" with the name you would like to give this task */
+/* Find & Replace "Arm" with the name you would like to give this task     */
+/* Find & Replace "Arm" with the name you would like to give this task      */
+/* Find & Replace "Arm" with the name you would like to give this task */
 /*------------------------------------------------------------------------------*/
 
 #include "WPILib.h"
-#include "Inclinometer.h"
+#include "Arm.h"
 
 // To locally enable debug printing: set true, to disable false
 #define DPRINTF if(false)dprintf
@@ -31,16 +31,16 @@ struct abuf
 
 //  Memory Log
 // <<CHANGEME>>
-class InclinometerLog : public MemoryLog
+class ArmLog : public MemoryLog
 {
 public:
-	InclinometerLog() : MemoryLog(
-			sizeof(struct abuf), INCLINOMETER_CYCLE_TIME, "incline",
+	ArmLog() : MemoryLog(
+			sizeof(struct abuf), Arm_CYCLE_TIME, "Arm",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
 	};
-	~InclinometerLog() {return;};
+	~ArmLog() {return;};
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
@@ -50,7 +50,7 @@ public:
 
 // Write one buffer into memory
 // <<CHANGEME>>
-unsigned int InclinometerLog::PutOne(void)
+unsigned int ArmLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
 	
@@ -69,7 +69,7 @@ unsigned int InclinometerLog::PutOne(void)
 }
 
 // Format the next buffer for file output
-unsigned int InclinometerLog::DumpBuffer(char *nptr, FILE *ofile)
+unsigned int ArmLog::DumpBuffer(char *nptr, FILE *ofile)
 {
 	struct abuf *ab = (struct abuf *)nptr;
 	
@@ -87,9 +87,9 @@ unsigned int InclinometerLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Inclinometer166::Inclinometer166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_B)	//Not Confirmed Numbers
+Arm166::Arm166(void)
 {
-	Start((char *)"166InclinometerTask", INCLINOMETER_CYCLE_TIME);
+	Start((char *)"166ArmTask", Arm_CYCLE_TIME);
 	// ^^^ Rename those ^^^
 	// <<CHANGEME>>
 	// Register the proxy
@@ -98,19 +98,19 @@ Inclinometer166::Inclinometer166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_
 };
 	
 // task destructor
-Inclinometer166::~Inclinometer166(void)
+Arm166::~Arm166(void)
 {
 	return;
 };
 	
 // Main function of the task
-int Inclinometer166::Main(int a2, int a3, int a4, int a5,
+int Arm166::Main(int a2, int a3, int a4, int a5,
 			int a6, int a7, int a8, int a9, int a10)
 {
-	InclinometerLog sl;                   // log
+	ArmLog sl;                   // log
 	
 	// Let the world know we're in
-	DPRINTF(LOG_DEBUG,"In the 166 Incline task\n");
+	DPRINTF(LOG_DEBUG,"In the 166 Arm task\n");
 	
 	// Wait for Robot go-ahead (e.g. entering Autonomous or Tele-operated mode)
 	// lHandle = Robot::getInstance() MUST go after this, otherwise code breaks
@@ -119,17 +119,12 @@ int Inclinometer166::Main(int a2, int a3, int a4, int a5,
 	// Register our logger
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
-	
-	Inclinometer.Start();
 		
     // General main loop (while in Autonomous or Tele mode)
-	proxy->add("Angle");
 	while (true) {
 		// <<CHANGEME>>
 		// Insert your own logic here
 		
-		incangle=Inclinometer.Get();
-		proxy->set("Angle",incangle);
         // Logging any values
 		// <<CHANGEME>>
 		// Make this match the declaraction above

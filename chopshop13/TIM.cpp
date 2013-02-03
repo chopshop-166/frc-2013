@@ -8,7 +8,7 @@
 /*----------------------------------------------------------------------------*/
 /*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
-
+	
 /*------------------------------------------------------------------------------*/
 /* Find & Replace "Timmy" with the name you would like to give this task     */
 /* Find & Replace "Testing" with the name you would like to give this task      */
@@ -33,16 +33,16 @@ struct abuf
 
 //  Memory Log
 // <<CHANGEME>>
-class TimmyLog : public MemoryLog
+class TIMLog : public MemoryLog
 {
 public:
-	TimmyLog() : MemoryLog(
-			sizeof(struct abuf), Timmy_CYCLE_TIME, "Timmy",
+	TIMLog() : MemoryLog(
+			sizeof(struct abuf), TIM_CYCLE_TIME, "Timmy",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
 	};
-	~TimmyLog() {return;};
+	~TIMLog() {return;};
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
@@ -52,7 +52,7 @@ public:
 
 // Write one buffer into memory
 // <<CHANGEME>>
-unsigned int TimmyLog::PutOne(void)
+unsigned int TIMLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
 	
@@ -71,7 +71,7 @@ unsigned int TimmyLog::PutOne(void)
 }
 
 // Format the next buffer for file output
-unsigned int TimmyLog::DumpBuffer(char *nptr, FILE *ofile)
+unsigned int TIMLog::DumpBuffer(char *nptr, FILE *ofile)
 {
 	struct abuf *ab = (struct abuf *)nptr;
 	
@@ -89,9 +89,9 @@ unsigned int TimmyLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Timmy166::Timmy166(void):LittleArm(TIM_ID),LimitA(INCLINER_LIMIT_A),LimitB(INCLINER_LIMIT_B)
+TIM166::TIM166(void):LittleArm(TIM_ID),LimitA(INCLINER_LIMIT_A),LimitB(INCLINER_LIMIT_B)
 {
-	Start((char *)"166TimmyTask", Timmy_CYCLE_TIME);
+	Start((char *)"166TIMTask", TIM_CYCLE_TIME);
 	// ^^^ Rename those ^^^
 	// <<CHANGEME>>
 	// Register the proxy
@@ -100,16 +100,16 @@ Timmy166::Timmy166(void):LittleArm(TIM_ID),LimitA(INCLINER_LIMIT_A),LimitB(INCLI
 };
 	
 // task destructor
-Timmy166::~Timmy166(void)
+TIM166::~TIM166(void)
 {
 	return;
 };
 	
 // Main function of the task
-int Timmy166::Main(int a2, int a3, int a4, int a5,
+int TIM166::Main(int a2, int a3, int a4, int a5,
 			int a6, int a7, int a8, int a9, int a10)
 {
-	TimmyLog sl;                   // log
+	TIMLog sl;                   // log
 	
 	// Let the world know we're in
 	DPRINTF(LOG_DEBUG,"In the 166 Timmy task\n");
@@ -125,15 +125,14 @@ int Timmy166::Main(int a2, int a3, int a4, int a5,
 	proxy->add("RobotAngle");
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-		// <<CHANGEME>>
-		// Insert your own logic here
 		proxy->get("Angle");
 		timmyinfo=proxy->get("Angle");
 		
 		//timmyspeed = proxy->get(joytim_y);
 		printf("Angle: %f\r",timmyinfo);
 		
-		//
+		//Adjust TIM's arm to meet the required angle
+		
 		if(timmyinfo<TIM_ANGLE)
 			timmyspeed=TIMMY_SPEED;
 		if(timmyinfo>TIM_ANGLE)
@@ -147,8 +146,6 @@ int Timmy166::Main(int a2, int a3, int a4, int a5,
 		if(LimitB.Get()&&timmyspeed<0)
 			timmyspeed=0;
 			
-			
-		/**/
 		LittleArm.Set(timmyspeed);
 		
         // Logging any values

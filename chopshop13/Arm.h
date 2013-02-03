@@ -1,9 +1,9 @@
 /*******************************************************************************
-*  Project   		: chopshop13
-*  File Name  		: TIM.h     
+*  Project   		: Framework
+*  File Name  		: Arm.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 18, 2010
-*  File Description	: Template header file for tasks, with template functions
+*  File Description	: Arm header file for tasks, with Arm functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
 /*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
@@ -17,20 +17,22 @@
 //
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
+// You should rename this when you copy it into a new file
+// <<CHANGEME>>
+#define Arm_CYCLE_TIME (10) // 10ms
 
-#define TIM_CYCLE_TIME (10) // 10ms
-
-
-class TIM166 : public Team166Task
+// Rename this, too, or you'll run into collisions
+// <<CHANGEME>>
+class Arm166 : public Team166Task
 {
-
+	
 public:
 	
 	// task constructor
-	TIM166(void);
+	Arm166(void);
 
 	// task destructor
-	virtual ~TIM166(void);
+	virtual ~Arm166(void);
 
 	// Main function of the task
 	virtual int Main(int a2, int a3, int a4, int a5,
@@ -39,14 +41,8 @@ public:
 private:
 	//Declare Proxy and Robot handles
 	Proxy *proxy;				// Handle to proxy
-	Robot *lHandle;            // Local handle-
-	Victor LittleArm;		//TIM's little arm
-	DigitalInput LimitA;
-	DigitalInput LimitB;
+	Robot *lHandle;            // Local handle
 	
 	// Any variables that the task has as members go here
 	// <<CHANGEME>>
-	float timmyspeed;   //speed of little arm
-	float timmyinfo;	//proxy->get the angle	
-	
 };

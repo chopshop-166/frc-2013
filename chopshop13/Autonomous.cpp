@@ -33,7 +33,7 @@ AutonomousTask::AutonomousTask() {
 	while( lHandle->IsAutonomous() ) {
 		
 		OffsetValue = proxy->get ("TargetOffset");
-		printf("State: %d  Offset: %f", state, OffsetValue);
+		//printf("State: %d  Offset: %f", state, OffsetValue);
  switch(state){
 	           case INIT: //initializes autonomous
 	        	   lHandle->DriverStationDisplay("We are Initializing");
@@ -50,7 +50,7 @@ AutonomousTask::AutonomousTask() {
    		        	  AlignSpeedAlign = OffsetValue * ALIGN_SPEED_CONST;		   
    		        	  	  proxy->set(JOY_LEFT_Y, -AlignSpeedAlign);
    		        	  	  proxy->set(JOY_RIGHT_Y, AlignSpeedAlign);
-   		        	  	  printf("AlignSpeed: %f", AlignSpeedAlign);
+   		        	  	  //printf("AlignSpeed: %f", AlignSpeedAlign);
    	        	   }
    	        	   else
    	        	   {
@@ -119,3 +119,4 @@ AutonomousTask::AutonomousTask() {
 		Wait(AUTONOMOUS_WAIT_TIME);
 	}
 }
+

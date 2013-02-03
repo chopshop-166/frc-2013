@@ -18,18 +18,18 @@
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
 
-#define INCLINE_CYCLE_TIME (10) // 10ms
+#define INCLINOMETER_CYCLE_TIME (10) // 10ms
 
-class Incline166 : public Team166Task
+class Inclinometer166 : public Team166Task
 {
 	
 public:
 	
 	// task constructor
-	Incline166(void);
+	Inclinometer166(void);
 
 	// task destructor
-	virtual ~Incline166(void);
+	virtual ~Inclinometer166(void);
 
 	// Main function of the task
 	virtual int Main(int a2, int a3, int a4, int a5,
