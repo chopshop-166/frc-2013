@@ -22,10 +22,11 @@ class AutonomousTask
 {
 public:
 	AutonomousTask(void);
-	enum {INIT,ALIGNING,DRIVE,DUMP} state;
+	enum {INIT,DRIVE1,TURN,ALIGNING,DRIVE2,DUMP} state;
 	float OffsetValue; // The offset of the goal in degrees, positive or negative, provided by camera
 	float FrontDistance;  // The distance the robot is from the wall, provided by distance sensor
 	float AlignSpeed; // The speed that one side is set to when it needs to speed up, proportional
 	float OffsetValueAlign;//offset of goal in alignment stage
 	float AlignSpeedAlign;//speed one side is set to in alignment stage
+	float SonarDistance; // distnace from the sonar sensor
 };
