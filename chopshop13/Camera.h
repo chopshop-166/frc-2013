@@ -38,10 +38,5 @@ private:
 	int VALID_IMAGE;
 	int iwidth;
 	float TARGET_OFFSET;
-	float TARGET_HEIGHT;
-	float TARGET_WIDTH;
-	int particle_id;
-	float ar;
-	int entered_loop;
 };
 	
