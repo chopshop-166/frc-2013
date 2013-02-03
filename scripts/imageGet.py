@@ -45,15 +45,17 @@ hostname = "10.1.66.2"                # Host IP to connect to
 username = "anonymous"                # FTP username (often times anonymous)
 password = "guest"                    # FTP password (usually can be anything)
 remoteDir = "/"                       # Directory where the image(s) is/are
-remoteFile = "CRIOimage.jpg"          # Name of file you wish to download
+#remoteFile = "CRIOimage.jpg"          # Name of file you wish to download
+#remoteFile = "Original.png"
+remoteFile = "Filtered.png"
 keepCount = 1000                      # Max number of files to be saved when recording images (edit as needed)
 #########################
  
 # Don't edit these:
 
 #########################
-recordText="Recording:Press_to_Stop"  # These buttons currently don't accept spaces,
-playText  ="Playing:Press_to_Record"  # and are part of the GUI so don't change them.
+recordText="Recording:Press-to-Stop"  # These buttons currently don't accept spaces,
+playText  ="Playing:Press-to-Record"  # and are part of the GUI so don't change them.
 #########################
 
 class ManagedGUI(object):
@@ -154,6 +156,12 @@ class ManagedGUI(object):
                 elif msg == 'connected':
                   self.quitButton.configure(text="Quit (CONNECTED)")
 
+                elif msg == 'not-connected':
+                  self.quitButton.configure(text="Quit (NOT-CONNECTED)")
+
+                elif msg == 'no-images':
+                  self.quitButton.configure(text="Quit (NO-IMAGES)")
+
                 else:
                   pass
 
@@ -232,9 +240,12 @@ class ThreadedGUI(object):
                       self.connect = True
                     else:
                       self.connect = False
+                      self.queue.put("not-connected")
+                      continue
                 except:
                     print "Could not ping the image server:%s", hostname
                     self.connect = None
+                    self.queue.put("not-connected")
                     continue  # And try again if unsuccessful
 
             # Try to establish an FTP connection to the image server
@@ -244,6 +255,8 @@ class ThreadedGUI(object):
                     print "FTP established to image server:", hostname
                 except Exception:
                     print "Unable to establish FTP with image server:%s user:%s password:%s" %(hostname,username,password)
+                    self.queue.put("not-connected")
+                    self.connect = None
                     continue
                 try:
                     self.ftp.cwd(remoteDir)
@@ -251,6 +264,8 @@ class ThreadedGUI(object):
 
                 except Exception:
                     print "Unable to FTP connect and CWD to: ",remoteDir
+                    self.queue.put("not-connected")
+                    self.connect = None
                     continue
 
             if self.connect and self.ftp: # Now we can do the work...
@@ -266,10 +281,11 @@ class ThreadedGUI(object):
                     self.queue.put("imageFile")
 
                 except:
-                    #print 'Could not process file from image server'
-                    #self.ftp = None
-                    #self.connect = None
-                    pass
+                    print 'Could not process file from image server'
+                    self.queue.put("no-images")
+                    self.ftp = None
+                    self.connect = None
+                    continue
 
 if __name__ == '__main__':
     root = Tkinter.Tk()
