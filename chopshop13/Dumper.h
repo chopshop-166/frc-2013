@@ -42,8 +42,23 @@ private:
 	//Declare Proxy and Robot handles
 	Proxy *proxy;				// Handle to proxy
 	Robot *lHandle;            // Local handle
+	
+	
+	
+	
 	Victor DumperMotorA;
+	DigitalInput DumpLimit;
 	float RotateSpeed;
-	// Any variables that the task has as members go here
-	// <<CHANGEME>>
+	
+	//Location of dumper
+	enum location {
+		Storage,
+		Loading,
+		Dumping,
+		Pyramid
+	};
+	location CurPosition;
+	location OldPosition;
+	int Blips;
+	int Clicked;
 };

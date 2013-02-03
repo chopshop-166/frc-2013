@@ -35,7 +35,7 @@ class DumperLog : public MemoryLog
 {
 public:
 	DumperLog() : MemoryLog(
-			sizeof(struct abuf), DUMPER_CYCLE_TIME, "template",
+			sizeof(struct abuf), DUMPER_CYCLE_TIME, "Dumper",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
@@ -87,10 +87,14 @@ unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A)
+Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A), DumpLimit(DUMPER_LIMIT)
 {
-	Start((char *)"166Dumper", DUMPER_CYCLE_TIME);
+	Start((char *)"Dumper", DUMPER_CYCLE_TIME);
 	RotateSpeed = 0;
+	CurPosition = Storage;
+	OldPosition = Storage;
+	Blips = 0;
+	Clicked = 0;
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
@@ -109,7 +113,7 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 	DumperLog sl;                   // log
 	
 	// Let the world know we're in
-	DPRINTF(LOG_DEBUG,"In the 166 Dumper task\n");
+	DPRINTF(LOG_DEBUG,"In the Dumper task\n");
 	
 	// Wait for Robot go-ahead (e.g. entering Autonomous or Tele-operated mode)
 	// lHandle = Robot::getInstance() MUST go after this, otherwise code breaks
@@ -121,10 +125,36 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 		
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-		
-		RotateSpeed = proxy->get(JOY_COPILOT_DUMP);
-		
-		RotateSpeed /= 4;
+		//Reset Clicked if necessary
+		if (DumpLimit.Get()==0) {
+			Clicked = 0;
+		}
+		//Check If we are moving to a new position;
+		if (proxy->get(JOY_COPILOT_STORE)) {
+			OldPosition = CurPosition;
+			CurPosition = Storage;
+		} else if (proxy->get(JOY_COPILOT_LOAD)){
+			OldPosition = CurPosition;
+			CurPosition = Loading;
+		} else if (proxy->get(JOY_COPILOT_DUMP)) {
+			OldPosition = CurPosition;
+			CurPosition = Dumping;
+		}
+		// Figure out where we are moving
+		Blips = CurPosition - OldPosition;
+		if ((Clicked == 0) && (DumpLimit.Get())) {
+			Clicked = 1;
+		}
+		//Set us moving in the right direction
+		if (Blips < 0) {
+			Blips += Clicked;
+			RotateSpeed =-.2;
+		} else if(Blips > 0) {
+			Blips -= Clicked;
+			RotateSpeed = .2;
+		} else {
+			RotateSpeed = 0;
+		}
 		
 		//Set Motors to move
 		DumperMotorA.Set(RotateSpeed);

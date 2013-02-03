@@ -50,9 +50,12 @@
 #define JOY_LEFT_INCLINE ("joy1b4")
 #define JOY_RIGHT_INCLINE ("joy2b4")
 
-//Control Rotation of dumper system	
-#define JOY_COPILOT_DUMP ("joy3b1")
+//Control Position of Dumper
+#define JOY_COPILOT_ROTATE ("joy3y")
 
+#define JOY_COPILOT_STORE	("joy3b4")
+#define JOY_COPILOT_LOAD	("joy3b3")
+#define JOY_COPILOT_DUMP	("joy3b5")
 //Frisbee eject trigger
 #define JOY_COPILOT_EJECT ("joy3b2")
 
