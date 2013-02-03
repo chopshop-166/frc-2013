@@ -48,4 +48,5 @@ public:
 	void DumpLoggers(int dnum);					// Dump all logs
 	int DriverStationDisplay (const char*, ...);			// Display text on DS
 	DriverStation *dsHandle;					// Driver Station handle
+	Compressor *compress;
 };

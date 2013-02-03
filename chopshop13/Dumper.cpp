@@ -1,22 +1,22 @@
 /*******************************************************************************
 *  Project   		: Framework
-*  File Name  		: TaskTemplate.cpp     
+*  File Name  		: TaskDumper.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 18, 2010
-*  File Description	: Template source file for tasks, with template functions
+*  File Description	: Dumper source file for tasks, with template functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
 /*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------*/
-/* Find & Replace "Template" with the name you would like to give this task     */
-/* Find & Replace "Testing" with the name you would like to give this task      */
-/* Find & Replace "TaskTemplate" with the name you would like to give this task */
+/* Find & Replace "Dumper" with the name you would like to give this task     */
+/* Find & Replace "Dumper" with the name you would like to give this task      */
+/* Find & Replace "TaskDumper" with the name you would like to give this task */
 /*------------------------------------------------------------------------------*/
 
 #include "WPILib.h"
-#include "Drive.h"
+#include "Dumper.h"
 
 // To locally enable debug printing: set true, to disable false
 #define DPRINTF if(false)dprintf
@@ -31,16 +31,16 @@ struct abuf
 
 //  Memory Log
 // <<CHANGEME>>
-class DriveLog : public MemoryLog
+class DumperLog : public MemoryLog
 {
 public:
-	DriveLog() : MemoryLog(
-			sizeof(struct abuf), TEMPLATE_CYCLE_TIME, "template",
+	DumperLog() : MemoryLog(
+			sizeof(struct abuf), DUMPER_CYCLE_TIME, "template",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
 	};
-	~DriveLog() {return;};
+	~DumperLog() {return;};
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
@@ -50,7 +50,7 @@ public:
 
 // Write one buffer into memory
 // <<CHANGEME>>
-unsigned int DriveLog::PutOne(void)
+unsigned int DumperLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
 	
@@ -69,7 +69,7 @@ unsigned int DriveLog::PutOne(void)
 }
 
 // Format the next buffer for file output
-unsigned int DriveLog::DumpBuffer(char *nptr, FILE *ofile)
+unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
 {
 	struct abuf *ab = (struct abuf *)nptr;
 	
@@ -87,36 +87,29 @@ unsigned int DriveLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Drive::Drive(void): 
-	motorL1(MOTOR_L1_ID),
-	motorL2(MOTOR_L2_ID),
-	motorL3(MOTOR_L3_ID),
-	motorR1(MOTOR_R1_ID),
-	motorR2(MOTOR_R2_ID),
-	motorR3(MOTOR_R3_ID)
+Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A), DumperMotorB(MOTOR_DUMPER_B)
 {
-	Start((char *)"166TemplateTask", TEMPLATE_CYCLE_TIME);
-	// ^^^ Rename those ^^^ 
-	// <<CHANGEME>>
+	Start((char *)"166Dumper", DUMPER_CYCLE_TIME);
+	RotateSpeed = 0;
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
 };
 	
 // task destructor
-Drive::~Drive(void)
+Dumper166::~Dumper166(void)
 {
 	return;
 };
 	
 // Main function of the task
-int Drive::Main(int a2, int a3, int a4, int a5,
+int Dumper166::Main(int a2, int a3, int a4, int a5,
 			int a6, int a7, int a8, int a9, int a10)
 {
-	DriveLog sl;                   // log
+	DumperLog sl;                   // log
 	
 	// Let the world know we're in
-	DPRINTF(LOG_DEBUG,"In the 166 Template task\n");
+	DPRINTF(LOG_DEBUG,"In the 166 Dumper task\n");
 	
 	// Wait for Robot go-ahead (e.g. entering Autonomous or Tele-operated mode)
 	// lHandle = Robot::getInstance() MUST go after this, otherwise code breaks
@@ -125,21 +118,19 @@ int Drive::Main(int a2, int a3, int a4, int a5,
 	// Register our logger
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
-	
-	float joylefty;
-	float joyrighty;
+		
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-		joylefty = proxy->get(JOY_LEFT_Y);
-		joyrighty = proxy->get(JOY_RIGHT_Y);
 		
+		RotateSpeed = proxy->get(JOY_COPILOT_DUMP);
 		
-		motorL1.Set(joylefty);
-		motorL2.Set(joylefty);
-		motorL3.Set(joylefty);
-		motorR1.Set(-joyrighty);
-		motorR2.Set(-joyrighty);
-		motorR3.Set(-joyrighty);
+		RotateSpeed /= 4;
+		
+		//Set Motors to move
+		DumperMotorA.Set(RotateSpeed);
+		DumperMotorB.Set(RotateSpeed);
+		
+		// Make this match the declaraction above
 		sl.PutOne();
 		
 		// Wait for our next lap
