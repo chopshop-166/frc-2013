@@ -1,12 +1,12 @@
 /*******************************************************************************
-*  Project   		: Framework
-*  File Name  		: TaskDumper.h     
+*  Project   		: chopshop13
+*  File Name  		: Clutch.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
-*  File Description	: Dumper header file for tasks, with template functions
+*  Creation Date	: January 27, 2013
+*  File Description	: Clutch header file for tasks, with Clutch functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 #pragma once
@@ -19,20 +19,20 @@
 // of miliseconds. Max allowed time is 999 miliseconds.
 // You should rename this when you copy it into a new file
 // <<CHANGEME>>
-#define DUMPER_CYCLE_TIME (50) // 50ms
+#define Clutch_CYCLE_TIME (10) // 10ms
 
 // Rename this, too, or you'll run into collisions
 // <<CHANGEME>>
-class Dumper166 : public Team166Task
+class Clutch166 : public Team166Task
 {
 	
 public:
 	
 	// task constructor
-	Dumper166(void);
+	Clutch166(void);
 
 	// task destructor
-	virtual ~Dumper166(void);
+	virtual ~Clutch166(void);
 
 	// Main function of the task
 	virtual int Main(int a2, int a3, int a4, int a5,
@@ -42,8 +42,7 @@ private:
 	//Declare Proxy and Robot handles
 	Proxy *proxy;				// Handle to proxy
 	Robot *lHandle;            // Local handle
-	Victor DumperMotorA;
-	float RotateSpeed;
+	
 	// Any variables that the task has as members go here
-	// <<CHANGEME>>
+	Solenoid *clutch;
 };

@@ -1,22 +1,22 @@
 /*******************************************************************************
-*  Project   		: Framework
-*  File Name  		: TaskDumper.cpp     
+*  Project   		: ChopShop13
+*  File Name  		: Inclinometer.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 18, 2010
-*  File Description	: Dumper source file for tasks, with template functions
+*  File Description	: Template source file for tasks, with template functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
 /*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------*/
-/* Find & Replace "Dumper" with the name you would like to give this task     */
-/* Find & Replace "Dumper" with the name you would like to give this task      */
-/* Find & Replace "TaskDumper" with the name you would like to give this task */
+/* Find & Replace "Incline" with the name you would like to give this task     */
+/* Find & Replace "Testing" with the name you would like to give this task      */
+/* Find & Replace "Inclinometer" with the name you would like to give this task */
 /*------------------------------------------------------------------------------*/
 
 #include "WPILib.h"
-#include "Dumper.h"
+#include "Inclinometer.h"
 
 // To locally enable debug printing: set true, to disable false
 #define DPRINTF if(false)dprintf
@@ -31,16 +31,16 @@ struct abuf
 
 //  Memory Log
 // <<CHANGEME>>
-class DumperLog : public MemoryLog
+class InclineLog : public MemoryLog
 {
 public:
-	DumperLog() : MemoryLog(
-			sizeof(struct abuf), DUMPER_CYCLE_TIME, "template",
+	InclineLog() : MemoryLog(
+			sizeof(struct abuf), INCLINE_CYCLE_TIME, "incline",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
 	};
-	~DumperLog() {return;};
+	~InclineLog() {return;};
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
@@ -50,7 +50,7 @@ public:
 
 // Write one buffer into memory
 // <<CHANGEME>>
-unsigned int DumperLog::PutOne(void)
+unsigned int InclineLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
 	
@@ -69,7 +69,7 @@ unsigned int DumperLog::PutOne(void)
 }
 
 // Format the next buffer for file output
-unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
+unsigned int InclineLog::DumpBuffer(char *nptr, FILE *ofile)
 {
 	struct abuf *ab = (struct abuf *)nptr;
 	
@@ -87,29 +87,30 @@ unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A)
+Incline166::Incline166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_B)	//Not Confirmed Numbers
 {
-	Start((char *)"166Dumper", DUMPER_CYCLE_TIME);
-	RotateSpeed = 0;
+	Start((char *)"166InclineTask", INCLINE_CYCLE_TIME);
+	// ^^^ Rename those ^^^
+	// <<CHANGEME>>
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
 };
 	
 // task destructor
-Dumper166::~Dumper166(void)
+Incline166::~Incline166(void)
 {
 	return;
 };
 	
 // Main function of the task
-int Dumper166::Main(int a2, int a3, int a4, int a5,
+int Incline166::Main(int a2, int a3, int a4, int a5,
 			int a6, int a7, int a8, int a9, int a10)
 {
-	DumperLog sl;                   // log
+	InclineLog sl;                   // log
 	
 	// Let the world know we're in
-	DPRINTF(LOG_DEBUG,"In the 166 Dumper task\n");
+	DPRINTF(LOG_DEBUG,"In the 166 Incline task\n");
 	
 	// Wait for Robot go-ahead (e.g. entering Autonomous or Tele-operated mode)
 	// lHandle = Robot::getInstance() MUST go after this, otherwise code breaks
@@ -118,17 +119,19 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 	// Register our logger
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
+	
+	Inclinometer.Start();
 		
     // General main loop (while in Autonomous or Tele mode)
+	proxy->add("Angle");
 	while (true) {
+		// <<CHANGEME>>
+		// Insert your own logic here
 		
-		RotateSpeed = proxy->get(JOY_COPILOT_DUMP);
-		
-		RotateSpeed /= 4;
-		
-		//Set Motors to move
-		DumperMotorA.Set(RotateSpeed);
-		
+		incangle=Inclinometer.Get();
+		proxy->set("Angle",incangle);
+        // Logging any values
+		// <<CHANGEME>>
 		// Make this match the declaraction above
 		sl.PutOne();
 		

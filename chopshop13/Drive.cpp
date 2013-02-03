@@ -137,9 +137,9 @@ int Drive::Main(int a2, int a3, int a4, int a5,
 		motorL1.Set(joylefty);
 		motorL2.Set(joylefty);
 		motorL3.Set(joylefty);
-		motorR1.Set(joyrighty);
-		motorR2.Set(joyrighty);
-		motorR3.Set(joyrighty);
+		motorR1.Set(-joyrighty);
+		motorR2.Set(-joyrighty);
+		motorR3.Set(-joyrighty);
 		sl.PutOne();
 		
 		// Wait for our next lap

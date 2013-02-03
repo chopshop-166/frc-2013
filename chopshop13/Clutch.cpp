@@ -1,22 +1,16 @@
 /*******************************************************************************
-*  Project   		: Framework
-*  File Name  		: TaskDumper.cpp     
+*  Project   		: chopshop13
+*  File Name  		: Clutch.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
-*  File Description	: Dumper source file for tasks, with template functions
+*  Creation Date	: January 27, 2013
+*  File Description	: Clutch source file for tasks, with Clutch functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
-/*------------------------------------------------------------------------------*/
-/* Find & Replace "Dumper" with the name you would like to give this task     */
-/* Find & Replace "Dumper" with the name you would like to give this task      */
-/* Find & Replace "TaskDumper" with the name you would like to give this task */
-/*------------------------------------------------------------------------------*/
-
 #include "WPILib.h"
-#include "Dumper.h"
+#include "Clutch.h"
 
 // To locally enable debug printing: set true, to disable false
 #define DPRINTF if(false)dprintf
@@ -31,16 +25,16 @@ struct abuf
 
 //  Memory Log
 // <<CHANGEME>>
-class DumperLog : public MemoryLog
+class ClutchLog : public MemoryLog
 {
 public:
-	DumperLog() : MemoryLog(
-			sizeof(struct abuf), DUMPER_CYCLE_TIME, "template",
+	ClutchLog() : MemoryLog(
+			sizeof(struct abuf), Clutch_CYCLE_TIME, "Clutch",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
 	};
-	~DumperLog() {return;};
+	~ClutchLog() {return;};
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
@@ -50,7 +44,7 @@ public:
 
 // Write one buffer into memory
 // <<CHANGEME>>
-unsigned int DumperLog::PutOne(void)
+unsigned int ClutchLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
 	
@@ -69,7 +63,7 @@ unsigned int DumperLog::PutOne(void)
 }
 
 // Format the next buffer for file output
-unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
+unsigned int ClutchLog::DumpBuffer(char *nptr, FILE *ofile)
 {
 	struct abuf *ab = (struct abuf *)nptr;
 	
@@ -87,29 +81,30 @@ unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A)
+Clutch166::Clutch166(void)
 {
-	Start((char *)"166Dumper", DUMPER_CYCLE_TIME);
-	RotateSpeed = 0;
+	Start((char *)"166ClutchTask", Clutch_CYCLE_TIME);
+	// ^^^ Rename those ^^^
+	clutch= new Solenoid(1);//FIGURE OUT WHICH PORT THIS SHOULD ACUTALLY BE!!!
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
 };
 	
 // task destructor
-Dumper166::~Dumper166(void)
+Clutch166::~Clutch166(void)
 {
 	return;
 };
 	
 // Main function of the task
-int Dumper166::Main(int a2, int a3, int a4, int a5,
+int Clutch166::Main(int a2, int a3, int a4, int a5,
 			int a6, int a7, int a8, int a9, int a10)
 {
-	DumperLog sl;                   // log
+	ClutchLog sl;                   // log
 	
 	// Let the world know we're in
-	DPRINTF(LOG_DEBUG,"In the 166 Dumper task\n");
+	DPRINTF(LOG_DEBUG,"In the 166 Clutch task\n");
 	
 	// Wait for Robot go-ahead (e.g. entering Autonomous or Tele-operated mode)
 	// lHandle = Robot::getInstance() MUST go after this, otherwise code breaks
@@ -118,17 +113,27 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 	// Register our logger
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
-		
-    // General main loop (while in Autonomous or Tele mode)
+	float clutch_btnl;	
+	float clutch_btnr;
+	// General main loop (while in Autonomous or Tele mode)
 	while (true) {
+		clutch_btnl=proxy->get(JOY_LEFT_ENGAGE);
+		clutch_btnr=proxy->get(JOY_RIGHT_ENGAGE);
+		if(clutch_btnr||clutch_btnl == 1)
+		{
+			if(clutch->Get()==0)
+			{
+				clutch->Set(true);
+			}
+			else
+			{
+				clutch->Set(false);
+			}
+		}
+		// Insert your own logic here
 		
-		RotateSpeed = proxy->get(JOY_COPILOT_DUMP);
-		
-		RotateSpeed /= 4;
-		
-		//Set Motors to move
-		DumperMotorA.Set(RotateSpeed);
-		
+        // Logging any values
+		// <<CHANGEME>>
 		// Make this match the declaraction above
 		sl.PutOne();
 		

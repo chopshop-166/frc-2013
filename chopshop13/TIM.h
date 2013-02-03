@@ -1,9 +1,9 @@
 /*******************************************************************************
-*  Project   		: Framework
-*  File Name  		: TaskDumper.h     
+*  Project   		: chopshop13
+*  File Name  		: TIM.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 18, 2010
-*  File Description	: Dumper header file for tasks, with template functions
+*  File Description	: Template header file for tasks, with template functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
 /*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
@@ -17,22 +17,20 @@
 //
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
-// You should rename this when you copy it into a new file
-// <<CHANGEME>>
-#define DUMPER_CYCLE_TIME (50) // 50ms
 
-// Rename this, too, or you'll run into collisions
-// <<CHANGEME>>
-class Dumper166 : public Team166Task
+#define Timmy_CYCLE_TIME (10) // 10ms
+
+
+class Timmy166 : public Team166Task
 {
-	
+
 public:
 	
 	// task constructor
-	Dumper166(void);
+	Timmy166(void);
 
 	// task destructor
-	virtual ~Dumper166(void);
+	virtual ~Timmy166(void);
 
 	// Main function of the task
 	virtual int Main(int a2, int a3, int a4, int a5,
@@ -41,9 +39,14 @@ public:
 private:
 	//Declare Proxy and Robot handles
 	Proxy *proxy;				// Handle to proxy
-	Robot *lHandle;            // Local handle
-	Victor DumperMotorA;
-	float RotateSpeed;
+	Robot *lHandle;            // Local handle-
+	Victor LittleArm;		//TIM's little arm
+	DigitalInput LimitA;
+	DigitalInput LimitB;
+	
 	// Any variables that the task has as members go here
 	// <<CHANGEME>>
+	float timmyspeed; //speed of little arm
+	float timmyinfo;		//proxy->get the angle	
+	
 };

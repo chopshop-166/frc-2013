@@ -1,22 +1,22 @@
 /*******************************************************************************
 *  Project   		: Framework
-*  File Name  		: TaskDumper.cpp     
+*  File Name  		: FrontSonar.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 18, 2010
-*  File Description	: Dumper source file for tasks, with template functions
+*  File Description	: Template source file for tasks, with template functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
 /*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------*/
-/* Find & Replace "Dumper" with the name you would like to give this task     */
-/* Find & Replace "Dumper" with the name you would like to give this task      */
-/* Find & Replace "TaskDumper" with the name you would like to give this task */
+/* Find & Replace "Template" with the name you would like to give this task     */
+/* Find & Replace "Testing" with the name you would like to give this task      */
+/* Find & Replace "FrontSonar" with the name you would like to give this task */
 /*------------------------------------------------------------------------------*/
 
 #include "WPILib.h"
-#include "Dumper.h"
+#include "FrontSonar.h"
 
 // To locally enable debug printing: set true, to disable false
 #define DPRINTF if(false)dprintf
@@ -31,16 +31,16 @@ struct abuf
 
 //  Memory Log
 // <<CHANGEME>>
-class DumperLog : public MemoryLog
+class FrontSonarLog : public MemoryLog
 {
 public:
-	DumperLog() : MemoryLog(
-			sizeof(struct abuf), DUMPER_CYCLE_TIME, "template",
+	FrontSonarLog() : MemoryLog(
+			sizeof(struct abuf), TEMPLATE_CYCLE_TIME, "template",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
 	};
-	~DumperLog() {return;};
+	~FrontSonarLog() {return;};
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
@@ -50,7 +50,7 @@ public:
 
 // Write one buffer into memory
 // <<CHANGEME>>
-unsigned int DumperLog::PutOne(void)
+unsigned int FrontSonarLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
 	
@@ -69,7 +69,7 @@ unsigned int DumperLog::PutOne(void)
 }
 
 // Format the next buffer for file output
-unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
+unsigned int FrontSonarLog::DumpBuffer(char *nptr, FILE *ofile)
 {
 	struct abuf *ab = (struct abuf *)nptr;
 	
@@ -87,29 +87,30 @@ unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A)
+FrontSonar166::FrontSonar166(void):Sonar(SONAR_INPUT)
 {
-	Start((char *)"166Dumper", DUMPER_CYCLE_TIME);
-	RotateSpeed = 0;
+	Start((char *)"166FrontSonarTask", TEMPLATE_CYCLE_TIME);
+	// ^^^ Rename those ^^^
+	// <<CHANGEME>>
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
 };
 	
 // task destructor
-Dumper166::~Dumper166(void)
+FrontSonar166::~FrontSonar166(void)
 {
 	return;
 };
 	
 // Main function of the task
-int Dumper166::Main(int a2, int a3, int a4, int a5,
+int FrontSonar166::Main(int a2, int a3, int a4, int a5,
 			int a6, int a7, int a8, int a9, int a10)
 {
-	DumperLog sl;                   // log
+	FrontSonarLog sl;                   // log
 	
 	// Let the world know we're in
-	DPRINTF(LOG_DEBUG,"In the 166 Dumper task\n");
+	DPRINTF(LOG_DEBUG,"In the 166 FrontSonar task\n");
 	
 	// Wait for Robot go-ahead (e.g. entering Autonomous or Tele-operated mode)
 	// lHandle = Robot::getInstance() MUST go after this, otherwise code breaks
@@ -122,14 +123,8 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
 		
-		RotateSpeed = proxy->get(JOY_COPILOT_DUMP);
-		
-		RotateSpeed /= 4;
-		
-		//Set Motors to move
-		DumperMotorA.Set(RotateSpeed);
-		
-		// Make this match the declaraction above
+
+
 		sl.PutOne();
 		
 		// Wait for our next lap

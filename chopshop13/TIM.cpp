@@ -1,22 +1,24 @@
 /*******************************************************************************
-*  Project   		: Framework
-*  File Name  		: TaskDumper.cpp     
+*  Project   		: chopshop13
+*  File Name  		: TIM.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 18, 2010
-*  File Description	: Dumper source file for tasks, with template functions
+*  File Description	: Template source file for tasks, with template functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
 /*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------*/
-/* Find & Replace "Dumper" with the name you would like to give this task     */
-/* Find & Replace "Dumper" with the name you would like to give this task      */
-/* Find & Replace "TaskDumper" with the name you would like to give this task */
+/* Find & Replace "Timmy" with the name you would like to give this task     */
+/* Find & Replace "Testing" with the name you would like to give this task      */
+/* Find & Replace "TIM" with the name you would like to give this task */
 /*------------------------------------------------------------------------------*/
 
 #include "WPILib.h"
-#include "Dumper.h"
+#include "TIM.h"
+#include "Inclinometer.h"
+#include "Defines.h"
 
 // To locally enable debug printing: set true, to disable false
 #define DPRINTF if(false)dprintf
@@ -31,16 +33,16 @@ struct abuf
 
 //  Memory Log
 // <<CHANGEME>>
-class DumperLog : public MemoryLog
+class TimmyLog : public MemoryLog
 {
 public:
-	DumperLog() : MemoryLog(
-			sizeof(struct abuf), DUMPER_CYCLE_TIME, "template",
+	TimmyLog() : MemoryLog(
+			sizeof(struct abuf), Timmy_CYCLE_TIME, "Timmy",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
 	};
-	~DumperLog() {return;};
+	~TimmyLog() {return;};
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
@@ -50,7 +52,7 @@ public:
 
 // Write one buffer into memory
 // <<CHANGEME>>
-unsigned int DumperLog::PutOne(void)
+unsigned int TimmyLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
 	
@@ -69,7 +71,7 @@ unsigned int DumperLog::PutOne(void)
 }
 
 // Format the next buffer for file output
-unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
+unsigned int TimmyLog::DumpBuffer(char *nptr, FILE *ofile)
 {
 	struct abuf *ab = (struct abuf *)nptr;
 	
@@ -87,29 +89,30 @@ unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A)
+Timmy166::Timmy166(void):LittleArm(TIM_ID),LimitA(INCLINER_LIMIT_A),LimitB(INCLINER_LIMIT_B)
 {
-	Start((char *)"166Dumper", DUMPER_CYCLE_TIME);
-	RotateSpeed = 0;
+	Start((char *)"166TimmyTask", Timmy_CYCLE_TIME);
+	// ^^^ Rename those ^^^
+	// <<CHANGEME>>
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
 };
 	
 // task destructor
-Dumper166::~Dumper166(void)
+Timmy166::~Timmy166(void)
 {
 	return;
 };
 	
 // Main function of the task
-int Dumper166::Main(int a2, int a3, int a4, int a5,
+int Timmy166::Main(int a2, int a3, int a4, int a5,
 			int a6, int a7, int a8, int a9, int a10)
 {
-	DumperLog sl;                   // log
+	TimmyLog sl;                   // log
 	
 	// Let the world know we're in
-	DPRINTF(LOG_DEBUG,"In the 166 Dumper task\n");
+	DPRINTF(LOG_DEBUG,"In the 166 Timmy task\n");
 	
 	// Wait for Robot go-ahead (e.g. entering Autonomous or Tele-operated mode)
 	// lHandle = Robot::getInstance() MUST go after this, otherwise code breaks
@@ -118,17 +121,38 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 	// Register our logger
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
-		
+	
+	proxy->add("RobotAngle");
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
+		// <<CHANGEME>>
+		// Insert your own logic here
+		proxy->get("Angle");
+		timmyinfo=proxy->get("Angle");
 		
-		RotateSpeed = proxy->get(JOY_COPILOT_DUMP);
+		//timmyspeed = proxy->get(joytim_y);
+		printf("Angle: %f\r",timmyinfo);
 		
-		RotateSpeed /= 4;
+		//
+		if(timmyinfo<TIM_ANGLE)
+			timmyspeed=TIMMY_SPEED;
+		if(timmyinfo>TIM_ANGLE)
+			timmyspeed=-TIMMY_SPEED;
+		else
+			timmyspeed=0;
+
+		//If timmy is smashing into the limit switch, bind his arm
+		if(LimitA.Get()&&timmyspeed>0)
+			timmyspeed=0;
+		if(LimitB.Get()&&timmyspeed<0)
+			timmyspeed=0;
+			
+			
+		/**/
+		LittleArm.Set(timmyspeed);
 		
-		//Set Motors to move
-		DumperMotorA.Set(RotateSpeed);
-		
+        // Logging any values
+		// <<CHANGEME>>
 		// Make this match the declaraction above
 		sl.PutOne();
 		
