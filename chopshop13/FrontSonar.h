@@ -19,13 +19,15 @@
 // of miliseconds. Max allowed time is 999 miliseconds.
 // You should rename this when you copy it into a new file
 // <<CHANGEME>>
-#define TEMPLATE_CYCLE_TIME (50) // 10ms
+#define SONAR_CYCLE_TIME (50) // 10ms
 
 // Rename this, too, or you'll run into collisions
 // <<CHANGEME>>
 class FrontSonar166 : public Team166Task
 {
-	
+	#define SONAR_CYCLE_TIME (50) 
+	#define AVERAGESIZE (3)       
+	#define SONARINPERVOLT (102.4)   
 public:
 	
 	// task constructor

@@ -35,7 +35,7 @@ class FrontSonarLog : public MemoryLog
 {
 public:
 	FrontSonarLog() : MemoryLog(
-			sizeof(struct abuf), TEMPLATE_CYCLE_TIME, "template",
+			sizeof(struct abuf), SONAR_CYCLE_TIME, "FrontSonar",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
@@ -89,7 +89,7 @@ unsigned int FrontSonarLog::DumpBuffer(char *nptr, FILE *ofile)
 // task constructor
 FrontSonar166::FrontSonar166(void):Sonar(SONAR_INPUT)
 {
-	Start((char *)"166FrontSonarTask", TEMPLATE_CYCLE_TIME);
+	Start((char *)"166FrontSonarTask", SONAR_CYCLE_TIME);
 	// ^^^ Rename those ^^^
 	// <<CHANGEME>>
 	// Register the proxy
@@ -119,12 +119,33 @@ int FrontSonar166::Main(int a2, int a3, int a4, int a5,
 	// Register our logger
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
-		
+	
+	proxy->add("SONAR_DISTANCE");
+	float sonar_array[AVERAGESIZE];
+	for (int i=0; i<AVERAGESIZE;i++) {
+		sonar_array[i]= 0;
+	}
+	int i = 0;
+	
+	float sonar_volts=0;
+	float sonar_distance = 0;
+	
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
+		sonar_volts = Sonar.GetVoltage();
+		sonar_array[(i%AVERAGESIZE)] = sonar_volts;
+		sonar_distance = 0;
 		
-
-
+		for(unsigned j = 0;j<AVERAGESIZE;j++) {
+                sonar_distance += sonar_array[j];
+        }
+		sonar_distance/=AVERAGESIZE;
+		sonar_distance*=SONARINPERVOLT;
+		//sonar_distance = SONARINPERVOLT * sonar_volts;
+		
+		proxy->set("SONAR_DISTANCE", sonar_distance);
+		i++;
+		printf("Distance: %f  Raw: %f\r", sonar_distance, sonar_volts);
 		sl.PutOne();
 		
 		// Wait for our next lap
