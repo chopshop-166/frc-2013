@@ -31,16 +31,16 @@ struct abuf
 
 //  Memory Log
 // <<CHANGEME>>
-class InclineLog : public MemoryLog
+class InclinometerLog : public MemoryLog
 {
 public:
-	InclineLog() : MemoryLog(
-			sizeof(struct abuf), INCLINE_CYCLE_TIME, "incline",
+	InclinometerLog() : MemoryLog(
+			sizeof(struct abuf), INCLINOMETER_CYCLE_TIME, "incline",
 			"Seconds,Nanoseconds,Elapsed Time\n" // Put the names of the values in here, comma-seperated
 			) {
 		return;
 	};
-	~InclineLog() {return;};
+	~InclinometerLog() {return;};
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
@@ -50,7 +50,7 @@ public:
 
 // Write one buffer into memory
 // <<CHANGEME>>
-unsigned int InclineLog::PutOne(void)
+unsigned int InclinometerLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
 	
@@ -69,7 +69,7 @@ unsigned int InclineLog::PutOne(void)
 }
 
 // Format the next buffer for file output
-unsigned int InclineLog::DumpBuffer(char *nptr, FILE *ofile)
+unsigned int InclinometerLog::DumpBuffer(char *nptr, FILE *ofile)
 {
 	struct abuf *ab = (struct abuf *)nptr;
 	
@@ -87,9 +87,9 @@ unsigned int InclineLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Incline166::Incline166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_B)	//Not Confirmed Numbers
+Inclinometer166::Inclinometer166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_B)	//Not Confirmed Numbers
 {
-	Start((char *)"166InclineTask", INCLINE_CYCLE_TIME);
+	Start((char *)"166InclinometerTask", INCLINOMETER_CYCLE_TIME);
 	// ^^^ Rename those ^^^
 	// <<CHANGEME>>
 	// Register the proxy
@@ -98,16 +98,16 @@ Incline166::Incline166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_B)	//Not C
 };
 	
 // task destructor
-Incline166::~Incline166(void)
+Inclinometer166::~Inclinometer166(void)
 {
 	return;
 };
 	
 // Main function of the task
-int Incline166::Main(int a2, int a3, int a4, int a5,
+int Inclinometer166::Main(int a2, int a3, int a4, int a5,
 			int a6, int a7, int a8, int a9, int a10)
 {
-	InclineLog sl;                   // log
+	InclinometerLog sl;                   // log
 	
 	// Let the world know we're in
 	DPRINTF(LOG_DEBUG,"In the 166 Incline task\n");

@@ -18,19 +18,19 @@
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
 
-#define Timmy_CYCLE_TIME (10) // 10ms
+#define TIM_CYCLE_TIME (10) // 10ms
 
 
-class Timmy166 : public Team166Task
+class TIM166 : public Team166Task
 {
 
 public:
 	
 	// task constructor
-	Timmy166(void);
+	TIM166(void);
 
 	// task destructor
-	virtual ~Timmy166(void);
+	virtual ~TIM166(void);
 
 	// Main function of the task
 	virtual int Main(int a2, int a3, int a4, int a5,
@@ -46,7 +46,7 @@ private:
 	
 	// Any variables that the task has as members go here
 	// <<CHANGEME>>
-	float timmyspeed; //speed of little arm
-	float timmyinfo;		//proxy->get the angle	
+	float timmyspeed;   //speed of little arm
+	float timmyinfo;	//proxy->get the angle	
 	
 };
