@@ -104,15 +104,13 @@
 #define TIM_ANGLE (60)
 #define TIMMY_SPEED (.3)
 
-//Defines The Speeds Used During Autonomous
-#define ALIGN_SPEED_CONST (.2)
-#define AUTO_SPEED (.4)
-#define ALIGNMENT_SPEED (.6)
-#define DEAD_LEFT (1)
-#define DEAD_RIGHT (-1)
+//Defines Used During Autonomous
+#define ALIGN_SPEED_CONST (.5)
+#define FORWARD_SPEED (.4)
+#define ALIGNMENT_SPEED (.5)
+#define DEAD_ZONE (.2)
+#define DUMP_DISTANCE (6)
 
-//Sensor Values For Autonomous
-#define DUMP_DISTANCE (6) //This is the distance to the wall that we need to be to dump into the goal
 
 
 

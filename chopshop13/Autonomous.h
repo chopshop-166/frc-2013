@@ -14,7 +14,7 @@
 #include "MemoryLog.h"
 #include "WPILib.h"
 #include "BaeUtilities.h"
-#include <cmath>
+
 
 #define AUTONOMOUS_WAIT_TIME (0.050)
 

@@ -154,6 +154,7 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 		//printf("Width: %d\r",iwidth);
 		if (iwidth != 0)
 		{
+		entered_loop = 0;
 		BinaryImage *thresholdImage = image->ThresholdHSV(threshold);	// get just the red target pixels
 //   consider adding histogram to set lower end of V threshold
 		
@@ -194,7 +195,7 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 					}
 				
 				}
-				printf("particle: %d  (%d,%d)\n", i, r->center_mass_x, r->center_mass_y);
+				//printf("particle: %d  (%d,%d)\n", i, r->center_mass_x, r->center_mass_y);
 				
 			}
 				
@@ -205,7 +206,7 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 				TARGET_HEIGHT = float(target->boundingRect.height);
 				TARGET_WIDTH = float(target->boundingRect.width);
 				ar = TARGET_WIDTH / TARGET_HEIGHT;
-				printf("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\n", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
+				//printf("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\n", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
 				TARGET_OFFSET =(target->center_mass_x - 160) / 160.0;
 				VALID_IMAGE = 1;
 				proxy->set("VALID_IMAGE",VALID_IMAGE);
