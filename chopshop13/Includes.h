@@ -6,5 +6,5 @@
 #include "Drive.h"
 #include "Dumper.h"
 #include "Camera.h"
-
+#include "FrontSonar.h"
 #endif
