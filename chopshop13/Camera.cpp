@@ -94,7 +94,7 @@ CameraTask::CameraTask(void):camera(AxisCamera::GetInstance("10.1.66.11"))
 		
 		
 {
-	Start((char *)"166TemplateTask", CAMERA_CYCLE_TIME);
+	Start((char *)"166Camera", CAMERA_CYCLE_TIME);
 	// ^^^ Rename those ^^^
 	// <<CHANGEME>>
 	// Register the prox
@@ -195,7 +195,7 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 					}
 				
 				}
-				//printf("particle: %d  (%d,%d)\n", i, r->center_mass_x, r->center_mass_y);
+				printf("particle: %d  (%d,%d)\r\n", i, r->center_mass_x, r->center_mass_y);
 				
 			}
 				
@@ -206,8 +206,7 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 				TARGET_HEIGHT = float(target->boundingRect.height);
 				TARGET_WIDTH = float(target->boundingRect.width);
 				ar = TARGET_WIDTH / TARGET_HEIGHT;
-				//printf("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\n", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
-				TARGET_OFFSET =(target->center_mass_x - 160) / 160.0;
+				printf("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\r", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
 				VALID_IMAGE = 1;
 				proxy->set("VALID_IMAGE",VALID_IMAGE);
 				proxy->set("TARGETOFFSET",TARGET_OFFSET);
@@ -218,12 +217,10 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 			{
 				VALID_IMAGE = 0;
 				proxy->set("VALID_IMAGE",VALID_IMAGE);
-				printf("DANGER WILL ROBINSON!DANGER!");
+				//printf("DANGER WILL ROBINSON!DANGER!");
 			}
 			
 		
-		
-		printf("\n");
 		
 		//DELETE IMAGES STUFF TO AVOID ANGRY ROBOTS
 		delete reports;
