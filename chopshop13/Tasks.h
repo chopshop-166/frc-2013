@@ -6,3 +6,5 @@
 // No need for pointers, or anything else, if it's derived from Team166Task
 Drive DriveObj;
 //Dumper166 DumperObj;
+Inclinometer166 INCLINObj;
+TIM166 TIMObj;

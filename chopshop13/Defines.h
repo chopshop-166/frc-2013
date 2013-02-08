@@ -119,8 +119,9 @@
 #define FORWARD_SPEED (.4)
 #define ALIGNMENT_SPEED (.5)
 #define DEAD_ZONE (.2)
-#define DUMP_DISTANCE (6)
-
+#define DUMP_DISTANCE (24)
+#define MAX_SONAR_DIST (120)
+#define TURNSPEED (.3)
 
 
 

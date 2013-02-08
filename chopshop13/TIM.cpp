@@ -17,8 +17,6 @@
 
 #include "WPILib.h"
 #include "TIM.h"
-#include "Inclinometer.h"
-#include "Defines.h"
 
 // To locally enable debug printing: set true, to disable false
 #define DPRINTF if(false)dprintf

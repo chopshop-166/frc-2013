@@ -50,7 +50,6 @@ Robot::Robot(void)
 		RobotHandle = this;
 	}
 	mlHead = 0;
-
 	// update DS
 	DriverStationDisplay("Starting Robot");
 	compress= new Compressor(PRESSURE_SWITCH,COMPRESSOR_RELAY);
@@ -60,6 +59,7 @@ Robot::Robot(void)
 
 	// Wait for all of our tasks to come up
 	printf("Getting ready to check if tasks are up.\n");
+	
 	while (!Team166Task::IfUp()) {
 		printf("Waiting for task(s) to come up: ");
 		Team166Task::PrintInactive();
