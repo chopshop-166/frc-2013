@@ -87,7 +87,9 @@ unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A), DumpLimit(DUMPER_LIMIT)
+Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A),
+		DumpLimit(DUMPER_LIMIT),
+		DumperPiston(DUMPER_PISTON)
 {
 	Start((char *)"Dumper", DUMPER_CYCLE_TIME);
 	RotateSpeed = 0;
@@ -158,7 +160,7 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 		
 		//Set Motors to move
 		DumperMotorA.Set(RotateSpeed);
-		
+		DumperPiston.Set(proxy->get(JOY_COPILOT_EJECT));
 		// Make this match the declaraction above
 		sl.PutOne();
 		

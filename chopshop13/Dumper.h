@@ -48,6 +48,8 @@ private:
 	
 	Victor DumperMotorA;
 	DigitalInput DumpLimit;
+	Solenoid DumperPiston;
+	
 	float RotateSpeed;
 	
 	//Location of dumper

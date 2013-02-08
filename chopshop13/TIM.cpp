@@ -125,27 +125,27 @@ int TIM166::Main(int a2, int a3, int a4, int a5,
 	proxy->add("RobotAngle");
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-		proxy->get("Angle");
 		timmyinfo=proxy->get("Angle");
 		
 		//timmyspeed = proxy->get(joytim_y);
 		printf("Angle: %f\r",timmyinfo);
 		
 		//Adjust TIM's arm to meet the required angle
-		
+		/*
 		if(timmyinfo<TIM_ANGLE)
 			timmyspeed=TIMMY_SPEED;
 		if(timmyinfo>TIM_ANGLE)
 			timmyspeed=-TIMMY_SPEED;
 		else
 			timmyspeed=0;
-
+		 
 		//If timmy is smashing into the limit switch, bind his arm
 		if(LimitA.Get()&&timmyspeed>0)
 			timmyspeed=0;
 		if(LimitB.Get()&&timmyspeed<0)
 			timmyspeed=0;
-			
+		*/
+		timmyspeed = proxy->get("joy3y");
 		LittleArm.Set(timmyspeed);
 		
         // Logging any values

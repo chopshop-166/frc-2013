@@ -29,7 +29,7 @@
 #define MOTOR_DUMPER_A (7)
 
 //Define Inclination managment motor
-#define TIM_ID (8)
+#define TIM_ID (9)
 
 ////////////////////
 //JOYSTICK DEFINES//
@@ -37,10 +37,10 @@
 
 //Define drive joysticks
 #define JOY_LEFT_Y  ("joy1y")
-//#define JOY_RIGHT_Y ("joy2y")
+#define JOY_RIGHT_Y ("joy2y")
 
 //Define for Xbox
-#define JOY_RIGHT_Y ("joy1A5")
+//#define JOY_RIGHT_Y ("joy1A5")
 
 //Engage Clutch
 #define JOY_LEFT_ENGAGE ("joy1b3")
@@ -98,6 +98,13 @@
 
 //Define Compressor relay
 #define COMPRESSOR_RELAY (1)
+
+/////////////////////
+//Pneumatics Output//
+/////////////////////
+
+//Define Dumper ejection piston
+#define DUMPER_PISTON (1)
 
 /////////////////////////
 //TASK SPECIFIC DEFINES//
