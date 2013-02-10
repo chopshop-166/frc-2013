@@ -43,8 +43,10 @@
 //#define JOY_RIGHT_Y ("joy1A5")
 
 //Engage Clutch
-#define JOY_LEFT_ENGAGE ("joy1b3")
-#define JOY_RIGHT_ENGAGE ("joy2b3")
+#define JOY_LEFT_ENGAGE ("joy1b3n")
+#define JOY_RIGHT_ENGAGE ("joy2b3n")
+#define JOY_LEFT_TRACK ("joy1b3")
+#define JOY_RIGHT_TRACK ("joy2b3")
 
 //Incline robot
 #define JOY_LEFT_INCLINE ("joy1b4")
@@ -119,7 +121,9 @@
 #define FORWARD_SPEED (.4)
 #define ALIGNMENT_SPEED (.5)
 #define DEAD_ZONE (.2)
-#define DUMP_DISTANCE (6)
+#define DUMP_DISTANCE (24)
+#define MAX_SONAR_DIST (120)
+#define TURNSPEED (.3)
 
 
 
