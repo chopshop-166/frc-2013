@@ -9,7 +9,7 @@
 /*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
-#include "wpilib.h"
+#include "WPILib.h"
 #include "Robot.h"
 #include <string>
 
@@ -29,7 +29,7 @@ Proxy *Proxy::ProxyHandle = 0;
  * @brief Starts the Proxy166 task.
  */
 Proxy::Proxy(void):
-	stick1(1), stick2(2), stick3(3), stick4(4)
+		stick1(1), stick2(2), stick3(3), stick4(4)
 {
 	//
 	// Add the built in storage areas

@@ -38,6 +38,7 @@ private:
     FrameworkLogger *mlHead;					// Memory log head
     int maxLogId;								// Max log file id
     static Robot* RobotHandle;					// Singleton instance reference
+    Compressor *compress;
 public:
 	Robot(void);								// Constructor
 	void Autonomous(void);						// Method called by WPI when we're in autonomous mode
@@ -48,5 +49,5 @@ public:
 	void DumpLoggers(int dnum);					// Dump all logs
 	int DriverStationDisplay (const char*, ...);			// Display text on DS
 	DriverStation *dsHandle;					// Driver Station handle
-	Compressor *compress;
+	
 };

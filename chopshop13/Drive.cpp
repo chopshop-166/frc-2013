@@ -126,8 +126,8 @@ int Drive::Main(int a2, int a3, int a4, int a5,
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
 	
-	float joylefty;
-	float joyrighty;
+	float joylefty = 0;
+	float joyrighty = 0;
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
 		joylefty = proxy->get(JOY_LEFT_Y);

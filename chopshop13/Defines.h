@@ -85,7 +85,7 @@
 #define DUMPER_LIMIT (3)
 
 //Define pressure switch
-#define PRESSURE_SWITCH (4)
+#define PRESSURE_SWITCH (14)
 
 //Define Incliner limit switches
 #define INCLINER_LIMIT_A	(12)

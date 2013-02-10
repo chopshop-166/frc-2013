@@ -66,7 +66,7 @@ Robot::Robot(void)
 		printf("\n");
 		Wait (0.100);
 	}
-	printf("All tasks we depend upon are up!\n");	
+	printf("All tasks we depend upon are up!\n");
 }
 
 /**

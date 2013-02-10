@@ -91,12 +91,12 @@ class Proxy : public Team166Task{
 		static map<string,int> tracker;
 		static map<string,bool> newpress_list;
 
-		// Refernces to the physical joysticks
+		// References to the physical joysticks
 		Joystick stick1;
 		Joystick stick2;
 		Joystick stick3;
 		Joystick stick4;
-		
+	
 		bool wasEnabled;
 		bool manualJoystick[4];
 		int disableButtons[NUMBER_OF_JOYSTICKS];
