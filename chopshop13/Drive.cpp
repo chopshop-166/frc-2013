@@ -95,7 +95,7 @@ Drive::Drive(void):
 	motorR2(MOTOR_R2_ID),
 	motorR3(MOTOR_R3_ID)
 {
-	Start((char *)"166TemplateTask", TEMPLATE_CYCLE_TIME);
+	Start((char *)"166DriveTask", TEMPLATE_CYCLE_TIME);
 	// ^^^ Rename those ^^^ 
 	// <<CHANGEME>>
 	// Register the proxy

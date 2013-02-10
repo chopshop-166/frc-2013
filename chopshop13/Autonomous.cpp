@@ -34,8 +34,9 @@ AutonomousTask::AutonomousTask() {
 		
 		OffsetValue = proxy->get ("TargetOffset");
 		SonarDistance = proxy->get ("Sonar_Distance");
-		printf("State: %d  Offset: %f\r", state, OffsetValue);
- switch(state){
+		int Valid_Image = int(proxy->get("Valid_Image"));
+		printf("State: %d  Offset: %f Image: %d Distance: %f\r", state, OffsetValue, Valid_Image, SonarDistance);
+		switch(state){
 	           case INIT: //initializes autonomous
 	        	   lHandle->DriverStationDisplay("We are Initializing");
 	        	   if (SonarDistance != 0.0){
@@ -56,6 +57,7 @@ AutonomousTask::AutonomousTask() {
 	        		   proxy->set(JOY_RIGHT_Y, TURNSPEED);}
 	        	   else{
 	        	   state = ALIGNING;}
+	        	   break;
 	        	   
 	           case ALIGNING: //points the robot towards the goal using an offset provided by the camera
 	        	   if( (fabs(OffsetValue) >= DEAD_ZONE) && (proxy->get("Valid_Image") == 1) ){
@@ -77,14 +79,9 @@ AutonomousTask::AutonomousTask() {
 	        	   //FrontDistance = proxy->get("FrontDistance");
 
 		        	   if (SonarDistance > DUMP_DISTANCE){
-		        		   
-		        		   if(proxy->get("VALID_IMAGE") == 1){
 		        			   AlignSpeed = OffsetValue * ALIGN_SPEED_CONST; //Speed the robot aligns at, proportional
 		        			   proxy->set(JOY_LEFT_Y, -AlignSpeed - FORWARD_SPEED);
 			        	   	   proxy->set(JOY_RIGHT_Y, AlignSpeed - FORWARD_SPEED);}
-		        		   else{
-		        			   proxy->set(JOY_LEFT_Y, 0);
-		        			   proxy->set(JOY_RIGHT_Y, 0);}}
 		        	   else{
 		        		   	proxy->set(JOY_LEFT_Y, 0); //Stops robot
 		        		   	proxy->set(JOY_RIGHT_Y, 0); //Stops robot   
@@ -99,5 +96,7 @@ AutonomousTask::AutonomousTask() {
 
 		Wait(AUTONOMOUS_WAIT_TIME);
 	}
+	state = INIT;
+	
 }
 
