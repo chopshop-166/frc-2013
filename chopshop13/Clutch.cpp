@@ -116,6 +116,8 @@ int Clutch166::Main(int a2, int a3, int a4, int a5,
 	float clutch_btnl;	
 	float clutch_btnr;
 	// General main loop (while in Autonomous or Tele mode)
+	proxy->TrackNewpress(JOY_LEFT_TRACK);
+	proxy->TrackNewpress(JOY_RIGHT_TRACK);
 	while (true) {
 		clutch_btnl=proxy->get(JOY_LEFT_ENGAGE);
 		clutch_btnr=proxy->get(JOY_RIGHT_ENGAGE);

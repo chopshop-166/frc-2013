@@ -43,8 +43,10 @@
 //#define JOY_RIGHT_Y ("joy1A5")
 
 //Engage Clutch
-#define JOY_LEFT_ENGAGE ("joy1b3")
-#define JOY_RIGHT_ENGAGE ("joy2b3")
+#define JOY_LEFT_ENGAGE ("joy1b3n")
+#define JOY_RIGHT_ENGAGE ("joy2b3n")
+#define JOY_LEFT_TRACK ("joy1b3")
+#define JOY_RIGHT_TRACK ("joy2b3")
 
 //Incline robot
 #define JOY_LEFT_INCLINE ("joy1b4")
