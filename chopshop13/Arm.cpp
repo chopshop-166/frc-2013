@@ -1,12 +1,12 @@
 /*******************************************************************************
-*  Project   		: Framework
+*  Project   		: ChopShop13
 *  File Name  		: Arm.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
+*  Creation Date	: February 2, 2013
 *  File Description	: Arm source file for tasks, with Arm functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ unsigned int ArmLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Arm166::Arm166(void)
+Arm166::Arm166(void):left_enc(LEFT_ENCODER_A, LEFT_ENCODER_B, Encoder::k4X),right_enc(RIGHT_ENCODER_A, RIGHT_ENCODER_B, Encoder::k4X)
 {
 	Start((char *)"166ArmTask", Arm_CYCLE_TIME);
 	// ^^^ Rename those ^^^
@@ -119,9 +119,21 @@ int Arm166::Main(int a2, int a3, int a4, int a5,
 	// Register our logger
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
-		
+	left_enc.Start();
+	right_enc.Start();
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
+		clutch_btnl=proxy->get(JOY_LEFT_ENGAGE);
+		clutch_btnr=proxy->get(JOY_RIGHT_ENGAGE);
+		if(clutch_btnr||clutch_btnl == 1)
+		{
+			left_enc.Reset();
+			right_enc.Reset();
+		}
+		left_rotations=(left_enc.Get())/1024;
+		right_rotations=(right_enc.Get())/1024;
+		left_distance=1.5*left_rotations;
+		right_distance=1.5*right_rotations;
 		// <<CHANGEME>>
 		// Insert your own logic here
 		

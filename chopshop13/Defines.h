@@ -79,6 +79,12 @@
 //DIGITAL INPUTS//
 //////////////////
 
+//Define Encoder Inputs
+#define RIGHT_ENCODER_A (1)
+#define RIGHT_ENCODER_B (2)
+#define LEFT_ENCODER_A (3)
+#define LEFT_ENCODER_B (4)
+
 //Define Inclinometer Inputs
 #define INCLINOMETER_A (1)
 #define INCLINOMETER_B (2)

@@ -87,7 +87,7 @@ unsigned int InclinometerLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Inclinometer166::Inclinometer166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_B)	//Not Confirmed Numbers
+Inclinometer166::Inclinometer166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_B)	
 {
 	Start((char *)"166InclinometerTask", INCLINOMETER_CYCLE_TIME);
 	// ^^^ Rename those ^^^
