@@ -145,7 +145,7 @@ int FrontSonar166::Main(int a2, int a3, int a4, int a5,
 		
 		proxy->set("SONAR_DISTANCE", sonar_distance);
 		i++;
-		printf("Distance: %f  Raw: %f\r", sonar_distance, sonar_volts);
+		//printf("Distance: %f  Raw: %f\r", sonar_distance, sonar_volts);
 		sl.PutOne();
 		
 		// Wait for our next lap
