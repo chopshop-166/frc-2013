@@ -62,7 +62,7 @@
 #define JOY_COPILOT_EJECT ("joy3b2")
 
 //TIM's joystick control
-#define joytim_y ("joy4y")
+#define JOYTIM_Y ("joy4y")
 
 
 /////////////////
