@@ -2,11 +2,11 @@
 *  Project   		: ChopShop 13
 *  File Name  		: Autonomous.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 26, 2012
+*  Creation Date	: January 26, 2013
 *  File Description	: Robot code to execute in autonomous mode
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
@@ -19,7 +19,7 @@ AutonomousTask::AutonomousTask() {
 	// Create handles for proxy and robot
 	Robot *lHandle;
 	Proxy *proxy;
-	state = INIT;
+	state = INIT; //Set the state to INIT to start
 	// Register robot handle
 	while( !(lHandle = Robot::getInstance()) && !( lHandle->IsAutonomous() ) ) {
 		Wait(AUTONOMOUS_WAIT_TIME);
@@ -32,31 +32,34 @@ AutonomousTask::AutonomousTask() {
 	
 	while( lHandle->IsAutonomous() ) {
 		
-		OffsetValue = proxy->get ("TargetOffset");
-		SonarDistance = proxy->get ("Sonar_Distance");
-		int Valid_Image = int(proxy->get("Valid_Image"));
-		printf("State: %d  Offset: %f Image: %d Distance: %f\r", state, OffsetValue, Valid_Image, SonarDistance);
+		OffsetValue = proxy->get ("TargetOffset"); //Get the offset of the target from the center of the target(camera)
+		SonarDistance = proxy->get ("Sonar_Distance");//Get output from sonar sensor
+		int Valid_Image = int(proxy->get("Valid_Image"));//Get whether the camera has a valid target
+		
+		//USE THIS PRINTF TO DEBUG ALL OF AUTO.
+		//printf("State: %d  Offset: %f Image: %d Distance: %f\r", state, OffsetValue, Valid_Image, SonarDistance);
+		
 		switch(state){
-	           case INIT: //initializes autonomous
+	           case INIT: 
 	        	   lHandle->DriverStationDisplay("We are Initializing");
-	        	   if (SonarDistance != 0.0){
-	        		   state = DRIVE1;}
+	        	   if (SonarDistance != 0.0){//Make sure we have a output from sonar sensor
+	        		   state = DRIVE1;}//goto next state
 	        	   break;
 	        	   
 	           case DRIVE1:
-	        	   if(SonarDistance > MAX_SONAR_DIST){
+	        	   if(SonarDistance > MAX_SONAR_DIST){//If we are farther away than desired, go forward
 	        		   proxy->set(JOY_LEFT_Y, -FORWARD_SPEED);
 	        		   proxy->set(JOY_RIGHT_Y, -FORWARD_SPEED);}
 	        	   else{
-	        	   state = TURN;}
+	        	   state = TURN;} //goto next state
 	        	   break;
 	        	   
 	           case TURN:
-	        	   if(proxy->get("Valid_Image") == 0){
+	        	   if(proxy->get("Valid_Image") == 0){//If the camera doesn't see a target, turn untill you see one
 	        		   proxy->set(JOY_LEFT_Y, -TURNSPEED);
 	        		   proxy->set(JOY_RIGHT_Y, TURNSPEED);}
 	        	   else{
-	        	   state = ALIGNING;}
+	        	   state = ALIGNING;}//goto next state
 	        	   break;
 	        	   
 	           case ALIGNING: //points the robot towards the goal using an offset provided by the camera
@@ -64,24 +67,21 @@ AutonomousTask::AutonomousTask() {
    		        	  AlignSpeedAlign = OffsetValue * ALIGN_SPEED_CONST;		   
    		        	  	  proxy->set(JOY_LEFT_Y, -AlignSpeedAlign);
    		        	  	  proxy->set(JOY_RIGHT_Y, AlignSpeedAlign);}
-   		        	  	  //printf("AlignSpeed: %f", AlignSpeedAlign);
    	        	   else{
-   	        		   if( (fabs(OffsetValue) < DEAD_ZONE) && (proxy->get("Valid_Image") == 1) ){ 
+   	        		   if( (fabs(OffsetValue) < DEAD_ZONE) && (proxy->get("Valid_Image") == 1) ){//If we are within a certain amount of the center of the target, and we have a target, goto next state
    	        		   	   state = DRIVE2;}
-   	        		   if (proxy->get("Valid_Image") == 0){
+   	        		   if (proxy->get("Valid_Image") == 0){//We we don't have an image at this point, stop the robot(somthing went wrong)
    	        			   proxy->set(JOY_LEFT_Y, 0);
    	        			   proxy->set(JOY_RIGHT_Y, 0);}}
-   	        		   //printf("DERP A DERP");
    	        	   
    	        	   break;
 	        	   
 	           case DRIVE2: //drives the robot towards the goal, while still aligning
-	        	   //FrontDistance = proxy->get("FrontDistance");
-
+	        	   	   DRIVE2_GAIN = min((SonarDistance - DUMP_DISTANCE)/ 12,1);
 		        	   if (SonarDistance > DUMP_DISTANCE){
 		        			   AlignSpeed = OffsetValue * ALIGN_SPEED_CONST; //Speed the robot aligns at, proportional
-		        			   proxy->set(JOY_LEFT_Y, -AlignSpeed - FORWARD_SPEED);
-			        	   	   proxy->set(JOY_RIGHT_Y, AlignSpeed - FORWARD_SPEED);}
+		        			   proxy->set(JOY_LEFT_Y, -AlignSpeed - (FORWARD_SPEED * DRIVE2_GAIN));
+			        	   	   proxy->set(JOY_RIGHT_Y, AlignSpeed - (FORWARD_SPEED * DRIVE2_GAIN));}
 		        	   else{
 		        		   	proxy->set(JOY_LEFT_Y, 0); //Stops robot
 		        		   	proxy->set(JOY_RIGHT_Y, 0); //Stops robot   

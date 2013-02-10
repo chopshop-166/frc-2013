@@ -2,11 +2,11 @@
 *  Project   		: Framework
 *  File Name  		: FrontSonar.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
-*  File Description	: FrontSonar header file for tasks, with template functions
+*  Creation Date	: January 30, 2013
+*  File Description	: FrontSonar header
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 #pragma once
@@ -21,13 +21,11 @@
 // <<CHANGEME>>
 #define SONAR_CYCLE_TIME (50) // 10ms
 
-// Rename this, too, or you'll run into collisions
-// <<CHANGEME>>
 class FrontSonar166 : public Team166Task
 {
 	#define SONAR_CYCLE_TIME (50) 
-	#define AVERAGESIZE (3)       
-	#define SONARINPERVOLT (102.4)   
+	#define AVERAGESIZE (3)   //The size of the rolling average for the sonar sensor.    
+	#define SONARINPERVOLT (102.4)   //The magical conversion rate from volts to inches
 public:
 	
 	// task constructor
@@ -46,7 +44,4 @@ private:
 	Robot *lHandle;            // Local handle
 	
 	AnalogChannel Sonar;
-	
-	// Any variables that the task has as members go here
-	// <<CHANGEME>>
 };

@@ -117,13 +117,13 @@
 #define TIMMY_SPEED (.3)
 
 //Defines Used During Autonomous
-#define ALIGN_SPEED_CONST (.5)
-#define FORWARD_SPEED (.4)
-#define ALIGNMENT_SPEED (.5)
-#define DEAD_ZONE (.2)
+#define ALIGN_SPEED_CONST (.2)//was .5 
+#define FORWARD_SPEED (.2)//was .4
+#define ALIGNMENT_SPEED (.2)//was .5
+#define DEAD_ZONE (.3)
 #define DUMP_DISTANCE (24)
 #define MAX_SONAR_DIST (120)
-#define TURNSPEED (.3)
+#define TURNSPEED (.25) // was .3
 
 
 
