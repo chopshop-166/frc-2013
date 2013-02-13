@@ -9,12 +9,8 @@
 //
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
-// You should rename this when you copy it into a new file
-// <<CHANGEME>>
-#define CAMERA_CYCLE_TIME (100) // 10ms
+#define CAMERA_CYCLE_TIME (100) // This is the max rate before you cause major lagging and unhappy robots
 
-// Rename this, too, or you'll run into collisions
-// <<CHANGEME>>
 class CameraTask : public Team166Task
 {
 	

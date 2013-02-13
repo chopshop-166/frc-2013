@@ -1,19 +1,14 @@
 /*******************************************************************************
-*  Project   		: Framework
+*  Project   		: chopshop13
 *  File Name  		: FrontSonar.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
-*  File Description	: Template source file for tasks, with template functions
+*  Creation Date	: January 30, 2013
+*  File Description	: Get Values from sonar sensors
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
-/*------------------------------------------------------------------------------*/
-/* Find & Replace "Template" with the name you would like to give this task     */
-/* Find & Replace "Testing" with the name you would like to give this task      */
-/* Find & Replace "FrontSonar" with the name you would like to give this task */
-/*------------------------------------------------------------------------------*/
 
 #include "WPILib.h"
 #include "FrontSonar.h"
@@ -25,12 +20,8 @@
 struct abuf
 {
 	struct timespec tp;               // Time of snapshot
-	// Any values that need to be logged go here
-	// <<CHANGEME>>
 };
 
-//  Memory Log
-// <<CHANGEME>>
 class FrontSonarLog : public MemoryLog
 {
 public:
@@ -44,12 +35,10 @@ public:
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
-	// <<CHANGEME>>
 	unsigned int PutOne(void);     // Log the values needed-add in arguments
 };
 
 // Write one buffer into memory
-// <<CHANGEME>>
 unsigned int FrontSonarLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
@@ -59,8 +48,6 @@ unsigned int FrontSonarLog::PutOne(void)
 		
 		// Fill it in.
 		clock_gettime(CLOCK_REALTIME, &ob->tp);
-		// Add any values to be logged here
-		// <<CHANGEME>>
 		return (sizeof(struct abuf));
 	}
 	
@@ -77,8 +64,6 @@ unsigned int FrontSonarLog::DumpBuffer(char *nptr, FILE *ofile)
 	fprintf(ofile, "%u,%u,%4.5f\n",
 			ab->tp.tv_sec, ab->tp.tv_nsec,
 			((ab->tp.tv_sec - starttime.tv_sec) + ((ab->tp.tv_nsec-starttime.tv_nsec)/1000000000.))
-			// Add values here
-			// <<CHANGEME>>
 	);
 	
 	// Done
@@ -90,9 +75,6 @@ unsigned int FrontSonarLog::DumpBuffer(char *nptr, FILE *ofile)
 FrontSonar166::FrontSonar166(void):Sonar(SONAR_INPUT)
 {
 	Start((char *)"166FrontSonarTask", SONAR_CYCLE_TIME);
-	// ^^^ Rename those ^^^
-	// <<CHANGEME>>
-	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
 };
@@ -122,7 +104,7 @@ int FrontSonar166::Main(int a2, int a3, int a4, int a5,
 	
 	proxy->add("SONAR_DISTANCE");
 	float sonar_array[AVERAGESIZE];
-	for (int i=0; i<AVERAGESIZE;i++) {
+	for (int i=0; i<AVERAGESIZE;i++) {//Use a rolling average to eliminate any temporary freaky readings from sonar
 		sonar_array[i]= 0;
 	}
 	int i = 0;
@@ -141,11 +123,10 @@ int FrontSonar166::Main(int a2, int a3, int a4, int a5,
         }
 		sonar_distance/=AVERAGESIZE;
 		sonar_distance*=SONARINPERVOLT;
-		//sonar_distance = SONARINPERVOLT * sonar_volts;
 		
 		proxy->set("SONAR_DISTANCE", sonar_distance);
 		i++;
-		printf("Distance: %f  Raw: %f\r", sonar_distance, sonar_volts);
+		//printf("Distance: %f  Raw: %f\r", sonar_distance, sonar_volts);
 		sl.PutOne();
 		
 		// Wait for our next lap

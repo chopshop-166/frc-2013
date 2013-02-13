@@ -6,7 +6,7 @@
 *  File Description	: Header for robot code to execute in autonomous mode
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 #pragma once
 
@@ -22,11 +22,12 @@ class AutonomousTask
 {
 public:
 	AutonomousTask(void);
-	enum {INIT,DRIVE1,TURN,ALIGNING,DRIVE2,DUMP} state;
+	enum {INIT,DRIVE1,TURN,ALIGNING,DRIVE2,DUMP} state; //Define our 5 states
 	float OffsetValue; // The offset of the goal in degrees, positive or negative, provided by camera
 	float FrontDistance;  // The distance the robot is from the wall, provided by distance sensor
 	float AlignSpeed; // The speed that one side is set to when it needs to speed up, proportional
 	float OffsetValueAlign;//offset of goal in alignment stage
 	float AlignSpeedAlign;//speed one side is set to in alignment stage
 	float SonarDistance; // distnace from the sonar sensor
+	float DRIVE2_GAIN; //Gain for slowing down as we get closer to the target in DRIVE2
 };

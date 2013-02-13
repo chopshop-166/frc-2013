@@ -8,3 +8,5 @@ Drive DriveObj;
 //Dumper166 DumperObj;
 Inclinometer166 INCLINObj;
 TIM166 TIMObj;
+CameraTask CameraObject;
+FrontSonar166 SonarTask;

@@ -125,7 +125,7 @@ int TIM166::Main(int a2, int a3, int a4, int a5,
 	while (true) {
 		timmyinfo=proxy->get("Angle");
 		
-		//timmyspeed = proxy->get(joytim_y);
+		//timmyspeed = proxy->get(JOYTIM_Y);
 		//printf("Angle: %f\r",timmyinfo);
 		
 		//Adjust TIM's arm to meet the required angle

@@ -1,6 +1,6 @@
 /*******************************************************************************
 *  Project   		: chopshop13
-*  File Name  		: CameraTask.cpp     
+*  File Name  		: Camera.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 27, 2013
 *  File Description	: CameraTask Stuffs
@@ -28,12 +28,8 @@
 struct abuf
 {
 	struct timespec tp;               // Time of snapshot
-	// Any values that need to be logged go here
-	// <<CHANGEME>>
 };
 
-//  Memory Log
-// <<CHANGEME>>
 class CameraTaskLog : public MemoryLog
 {
 public:
@@ -47,12 +43,9 @@ public:
 	unsigned int DumpBuffer(          // Dump the next buffer into the file
 			char *nptr,               // Buffer that needs to be formatted
 			FILE *outputFile);        // and then stored in this file
-	// <<CHANGEME>>
 	unsigned int PutOne(void);     // Log the values needed-add in arguments
 };
 
-// Write one buffer into memory
-// <<CHANGEME>>
 unsigned int CameraTaskLog::PutOne(void)
 {
 	struct abuf *ob;               // Output buffer
@@ -62,8 +55,6 @@ unsigned int CameraTaskLog::PutOne(void)
 		
 		// Fill it in.
 		clock_gettime(CLOCK_REALTIME, &ob->tp);
-		// Add any values to be logged here
-		// <<CHANGEME>>
 		return (sizeof(struct abuf));
 	}
 	
@@ -80,8 +71,6 @@ unsigned int CameraTaskLog::DumpBuffer(char *nptr, FILE *ofile)
 	fprintf(ofile, "%u,%u,%4.5f\n",
 			ab->tp.tv_sec, ab->tp.tv_nsec,
 			((ab->tp.tv_sec - starttime.tv_sec) + ((ab->tp.tv_nsec-starttime.tv_nsec)/1000000000.))
-			// Add values here
-			// <<CHANGEME>>
 	);
 	
 	// Done
@@ -94,16 +83,14 @@ CameraTask::CameraTask(void):camera(AxisCamera::GetInstance("10.1.66.11"))
 		
 		
 {
-	Start((char *)"166TemplateTask", CAMERA_CYCLE_TIME);
-	// ^^^ Rename those ^^^
-	// <<CHANGEME>>
+	Start((char *)"166Camera", CAMERA_CYCLE_TIME);
 	// Register the prox
 	proxy = Proxy::getInstance();
 
-	camera.WriteResolution(AxisCamera::kResolution_320x240);
-	camera.WriteBrightness(30);
-	camera.WriteExposureControl(AxisCameraParams::kExposure_Hold);
-	camera.WriteWhiteBalance(AxisCameraParams::kWhiteBalance_Hold);
+	camera.WriteResolution(AxisCamera::kResolution_160x120);//Set the rez of the camera
+	camera.WriteBrightness(30);//Set the init brightness of the camera
+	camera.WriteExposureControl(AxisCameraParams::kExposure_Hold); //Keep the exposure of the camera constant
+	camera.WriteWhiteBalance(AxisCameraParams::kWhiteBalance_Hold); //Keep the whitebalence of the camera constant
 	return;
 };
 	
@@ -133,26 +120,39 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 	ParticleFilterCriteria2 criteria[] = {
 										{IMAQ_MT_BOUNDING_RECT_WIDTH, 30, 400, false, false},
 										{IMAQ_MT_BOUNDING_RECT_HEIGHT, 30, 400, false, false}
-	};
+	}; //Define the required size of a particle 
+	
 	iwidth = 0;
-	float ar = 0;
-	proxy->add("VALID_IMAGE");
-	proxy->add("TARGETOFFSET");
+	float ar = 0; //ar is aspect-ratio
+	proxy->add("VALID_IMAGE"); //Add valid image to proxy, a variable used to broadcast whether the camera has a valid target
+	proxy->add("TARGETOFFSET");//The proxy variable used to tell other tasks the offset of the chosen value from the center of the image with a value of -1 to 1
 	TARGET_HEIGHT = 0;
 	TARGET_WIDTH = 0;
-	ParticleAnalysisReport *target;
+	ParticleAnalysisReport *target;//Define custom set of final particles used to decide the target
 	
 	particle_id = 0;
 	
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-		VALID_IMAGE = 0;
-		ColorImage *image = new ColorImage(IMAQ_IMAGE_HSL);
 		
-		camera.GetImage(image);
-		iwidth = image->GetWidth();
-		//printf("Width: %d\r",iwidth);
-		if (iwidth != 0)
+		if (lHandle->IsAutonomous() == 0){ //Raise brightness for Tele-op so that humans can see stuff as well
+			camera.WriteBrightness(50);
+		}
+		else
+		{
+			camera.WriteBrightness(30);
+		}
+		
+		VALID_IMAGE = 0;
+		ColorImage *image = new ColorImage(IMAQ_IMAGE_HSL);//Create a new image variable of type ColorImage in HSL format
+		
+		camera.GetImage(image);//Get the image from the camera and save it into the image variable.
+		
+		iwidth = image->GetWidth();//The the image of the image we just got.
+		
+		//printf("Width: %d\r",iwidth);//Print the width of the image, DEBUG ONLY
+		
+		if (iwidth != 0)//Check to see if an image exists by checking width
 		{
 		entered_loop = 0;
 		BinaryImage *thresholdImage = image->ThresholdHSV(threshold);	// get just the red target pixels
@@ -166,22 +166,22 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 		BinaryImage *filteredImage = convexHullImage->ParticleFilter(criteria, 2);  // find the rectangles
 		vector<ParticleAnalysisReport> *reports = filteredImage->GetOrderedParticleAnalysisReports();  // get the results
 		
-		//IMAGE WRIGHTS, USE FOR DEBUGGING
+		//IMAGE WRITES, USE FOR DEBUGGING
 		//image->Write("Original.png");
 		//bigObjectsImage->Write("Threshold.png");
 		//filteredImage->Write("Filtered.png");
 		
 		
-		for (unsigned i = 0; i < reports->size(); i++) {
+		for (unsigned i = 0; i < reports->size(); i++) {//This loop goes through all final particles
 				ParticleAnalysisReport *r = &(reports->at(i));
-				TARGET_HEIGHT = float(r->boundingRect.height);
-				TARGET_WIDTH = float(r->boundingRect.width);
-				ar = TARGET_WIDTH / TARGET_HEIGHT;
-				if ((ar > .5) && (ar < 2.0))
+				TARGET_HEIGHT = float(r->boundingRect.height);//get individual particle height
+				TARGET_WIDTH = float(r->boundingRect.width);//get individual particle width
+				ar = TARGET_WIDTH / TARGET_HEIGHT;//Calculate aspect ratio
+				if ((ar > .5) && (ar < 2.0))//Check if the shape is square-ish...
 				{
 					if (entered_loop == 1)
 					{
-						if (r->center_mass_y > target->center_mass_y)
+						if (r->center_mass_y > target->center_mass_y)//Choose the lowest target
 						{
 							target = &(reports->at(i));
 							particle_id = i;
@@ -195,37 +195,39 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 					}
 				
 				}
-				//printf("particle: %d  (%d,%d)\n", i, r->center_mass_x, r->center_mass_y);
+				//USE THIS PRINTF FOR DEBUG
+				//printf("particle: %d  (%d,%d)\r\n", i, r->center_mass_x, r->center_mass_y);
 				
 			}
 				
 			
 			if ((reports->size() > 0) && (entered_loop == 1))
 			{
-				TARGET_OFFSET =(target->center_mass_x - 160) / 160.0;
-				TARGET_HEIGHT = float(target->boundingRect.height);
-				TARGET_WIDTH = float(target->boundingRect.width);
-				ar = TARGET_WIDTH / TARGET_HEIGHT;
-				//printf("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\n", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
-				TARGET_OFFSET =(target->center_mass_x - 160) / 160.0;
-				VALID_IMAGE = 1;
+				TARGET_OFFSET =(target->center_mass_x - 80) / 80.0;//calculate offset by subtracting half the width of the camera rez
+				TARGET_HEIGHT = float(target->boundingRect.height);//get the final targets height
+				TARGET_WIDTH = float(target->boundingRect.width);//get the final targets width
+				ar = TARGET_WIDTH / TARGET_HEIGHT;//calculate the final target's a-s
+				
+				//USE THIS PRINTF TO DEBUG CHOOSING CORRECT TARGET
+				//printf("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\r", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
+				
+				VALID_IMAGE = 1;//tell everyone we have a target
+				
 				proxy->set("VALID_IMAGE",VALID_IMAGE);
 				proxy->set("TARGETOFFSET",TARGET_OFFSET);
-				//ENABLE FOR DEBUGGING//
-				//printf("Status:Image Aquired");
 			}
 			else
 			{
-				VALID_IMAGE = 0;
+				VALID_IMAGE = 0;//tell everyone we wont have an image
 				proxy->set("VALID_IMAGE",VALID_IMAGE);
-				printf("DANGER WILL ROBINSON!DANGER!");
+				
+				//USE FOR DEBUGGING WHETHER A TARGET IS RECONIZED AND COMIC RELIEF
+				//printf("DANGER WILL ROBINSON!DANGER!");
 			}
 			
 		
 		
-		printf("\n");
-		
-		//DELETE IMAGES STUFF TO AVOID ANGRY ROBOTS
+		//DELETE IMAGES STUFF TO AVOID ANGRY ROBOTS, VERRYYY IMPORTANT
 		delete reports;
 		delete filteredImage;
 		delete convexHullImage;
@@ -235,8 +237,8 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 		}
 		else
 		{
-			//USE FOR DEBUGGING CAMERA
-		//printf("Waiting for Image \r");	
+			//USE FOR DEBUGGING WHETHER CAMERA IS GETTING AN IMAGE
+			//printf("Waiting for Image \r");	
 		}
 		
 		sl.PutOne();
