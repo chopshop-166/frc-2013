@@ -118,8 +118,8 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 	lHandle->RegisterLogger(&sl);
 	Threshold threshold(60, 110, 90, 255, 20, 255);	//HSV threshold criteria, ranges are in that order ie. Hue is 60-100
 	ParticleFilterCriteria2 criteria[] = {
-										{IMAQ_MT_BOUNDING_RECT_WIDTH, 30, 400, false, false},
-										{IMAQ_MT_BOUNDING_RECT_HEIGHT, 30, 400, false, false}
+										{IMAQ_MT_BOUNDING_RECT_WIDTH, 21, 400, false, false},
+										{IMAQ_MT_BOUNDING_RECT_HEIGHT, 21, 400, false, false}
 	}; //Define the required size of a particle 
 	
 	iwidth = 0;
@@ -128,6 +128,7 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 	proxy->add("TARGETOFFSET");//The proxy variable used to tell other tasks the offset of the chosen value from the center of the image with a value of -1 to 1
 	TARGET_HEIGHT = 0;
 	TARGET_WIDTH = 0;
+	set_brightness = 0;
 	ParticleAnalysisReport *target;//Define custom set of final particles used to decide the target
 	
 	particle_id = 0;
@@ -135,13 +136,12 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
 		
-		if (lHandle->IsAutonomous() == 0){ //Raise brightness for Tele-op so that humans can see stuff as well
+		if ((lHandle->IsAutonomous() == 0) && (set_brightness == 0)){ //Raise brightness for Tele-op so that humans can see stuff as well
 			camera.WriteBrightness(50);
+			set_brightness = 1;
 		}
-		else
-		{
-			camera.WriteBrightness(30);
-		}
+		
+		
 		
 		VALID_IMAGE = 0;
 		ColorImage *image = new ColorImage(IMAQ_IMAGE_HSL);//Create a new image variable of type ColorImage in HSL format

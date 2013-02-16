@@ -39,5 +39,6 @@ private:
 	int particle_id;
 	float ar;
 	int entered_loop;
+	int set_brightness;
 };
 	

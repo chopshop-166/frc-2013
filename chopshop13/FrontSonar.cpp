@@ -72,7 +72,7 @@ unsigned int FrontSonarLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-FrontSonar166::FrontSonar166(void):Sonar(SONAR_INPUT)
+FrontSonar166::FrontSonar166(void):Sonar(SONAR_INPUT_LEFT)
 {
 	Start((char *)"166FrontSonarTask", SONAR_CYCLE_TIME);
 	proxy = Proxy::getInstance();

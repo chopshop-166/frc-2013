@@ -70,7 +70,8 @@
 /////////////////
 
 //Define Sonar Sensor
-#define SONAR_INPUT (1)
+#define SONAR_INPUT_LEFT (1)
+#define SONAR_INPUT_RIGHT (2)
 
 //Define 
 
@@ -120,9 +121,9 @@
 #define ALIGN_SPEED_CONST (.2)//was .5 
 #define FORWARD_SPEED (.2)//was .4
 #define ALIGNMENT_SPEED (.2)//was .5
-#define DEAD_ZONE (.3)
+#define DEAD_ZONE (.25)//.25 ish works well
 #define DUMP_DISTANCE (24)
-#define MAX_SONAR_DIST (120)
+#define MAX_SONAR_DIST (72)//Actually want 60" here, but robot is slow so added a foot.
 #define TURNSPEED (.25) // was .3
 
 
