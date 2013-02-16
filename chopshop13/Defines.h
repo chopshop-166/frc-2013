@@ -134,10 +134,13 @@
 #define ALIGN_SPEED_CONST (.4)//was .5 
 #define FORWARD_SPEED (.6)//was .4
 #define ALIGNMENT_SPEED (.4)//was .5
-#define DEAD_ZONE (.25)//.25 ish works well
+#define DEAD_ZONE (.2)
 #define DUMP_DISTANCE (20)
 #define MAX_SONAR_DIST (72)//Actually want 60" here, but robot is slow so added a foot.
 #define TURNSPEED (.3) // was .3
+#define MIN_SPEED (.2)
+#define MIN_SPEED_ALIGN (.2)
+
 
 //Defines for dumper
 #define DUMPER_IN_POSITION ("InPosition")
