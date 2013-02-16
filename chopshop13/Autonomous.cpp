@@ -37,7 +37,7 @@ AutonomousTask::AutonomousTask() {
 		int Valid_Image = int(proxy->get("Valid_Image"));//Get whether the camera has a valid target
 		
 		//USE THIS PRINTF TO DEBUG ALL OF AUTO.
-		//printf("State: %d  Offset: %f Image: %d Distance: %f\r", state, OffsetValue, Valid_Image, SonarDistance);
+		printf("State: %d  Offset: %f Image: %d Distance: %f\r", state, OffsetValue, Valid_Image, SonarDistance);
 		
 		switch(state){
 	           case INIT: 
@@ -89,7 +89,12 @@ AutonomousTask::AutonomousTask() {
 	 	 	 	   break;
 	 	 	 	   
 	 	 	   case DUMP: //when at the proper distance, activate dump button
-	 	 		   proxy->set(JOY_COPILOT_EJECT,1);
+	 	 		   proxy->set(JOY_COPILOT_DUMP,1);
+	 	 		   if (proxy->get(DUMPER_IN_POSITION))
+	 	 		   {
+	 	 			   proxy->set(JOY_COPILOT_EJECT,1);
+	 	 		   }
+	 	 		   
 	 	 		   break;
 	}
         	   

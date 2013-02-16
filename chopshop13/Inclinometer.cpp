@@ -123,13 +123,13 @@ int Inclinometer166::Main(int a2, int a3, int a4, int a5,
 	Inclinometer.Start();
 		
     // General main loop (while in Autonomous or Tele mode)
-	proxy->add("Angle");
+	proxy->add(ROBOT_ANGLE);
 	while (true) {
 		// <<CHANGEME>>
 		// Insert your own logic here
 		
 		incangle=Inclinometer.Get();
-		proxy->set("Angle",incangle);
+		proxy->set(ROBOT_ANGLE,incangle);
         // Logging any values
 		// <<CHANGEME>>
 		// Make this match the declaraction above

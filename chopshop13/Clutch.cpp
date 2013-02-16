@@ -85,7 +85,7 @@ Clutch166::Clutch166(void)
 {
 	Start((char *)"166ClutchTask", Clutch_CYCLE_TIME);
 	// ^^^ Rename those ^^^
-	clutch= new Solenoid(1);//FIGURE OUT WHICH PORT THIS SHOULD ACUTALLY BE!!!
+	clutch= new Solenoid(CLUTCH_PISTON);//FIGURE OUT WHICH PORT THIS SHOULD ACUTALLY BE!!!
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
