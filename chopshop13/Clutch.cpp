@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Project   		: chopshop13
+*  Project   		: Chopshop13
 *  File Name  		: Clutch.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 27, 2013
@@ -85,7 +85,7 @@ Clutch166::Clutch166(void)
 {
 	Start((char *)"166ClutchTask", Clutch_CYCLE_TIME);
 	// ^^^ Rename those ^^^
-	clutch= new Solenoid(1);//FIGURE OUT WHICH PORT THIS SHOULD ACUTALLY BE!!!
+	clutch= new Solenoid(CLUTCH_PISTON);//FIGURE OUT WHICH PORT THIS SHOULD ACUTALLY BE!!!
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
@@ -113,8 +113,7 @@ int Clutch166::Main(int a2, int a3, int a4, int a5,
 	// Register our logger
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
-	float clutch_btnl;	
-	float clutch_btnr;
+	
 	// General main loop (while in Autonomous or Tele mode)
 	proxy->TrackNewpress(JOY_LEFT_TRACK);
 	proxy->TrackNewpress(JOY_RIGHT_TRACK);

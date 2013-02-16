@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Project   		: Framework
+*  Project   		: Chopshop13
 *  File Name  		: Defines.h    
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 18, 2012
@@ -26,7 +26,7 @@
 #define MOTOR_R3_ID (6)
 
 //Define Dumper motors
-#define MOTOR_DUMPER_A (7)
+#define MOTOR_DUMPER_A (8)
 
 //Define Inclination managment motor
 #define TIM_ID (9)
@@ -55,14 +55,15 @@
 //Control Position of Dumper
 #define JOY_COPILOT_ROTATE ("joy3y")
 
-#define JOY_COPILOT_STORE	("joy3b4")
-#define JOY_COPILOT_LOAD	("joy3b3")
-#define JOY_COPILOT_DUMP	("joy3b5")
+#define JOY_COPILOT_STORE	("joy3b4n")
+#define JOY_COPILOT_LOAD	("joy3b2n")
+#define JOY_COPILOT_DUMP	("joy3b1n")
+#define JOY_COPILOT_DUMP_PYRAMID ("joy3b3")
 //Frisbee eject trigger
-#define JOY_COPILOT_EJECT ("joy3b2")
+#define JOY_COPILOT_EJECT ("joy3b6")
 
 //TIM's joystick control
-#define joytim_y ("joy4y")
+#define JOYTIM_Y ("joy4z")
 
 
 /////////////////
@@ -80,12 +81,21 @@
 //DIGITAL INPUTS//
 //////////////////
 
+
+
 //Define Inclinometer Inputs
 #define INCLINOMETER_A (1)
 #define INCLINOMETER_B (2)
 
 // Define Dumper Inputs
 #define DUMPER_LIMIT (3)
+#define DUMPER_BOTTOM_LIMIT (4)
+
+//Define Encoder Inputs
+#define RIGHT_ENCODER_A (5)
+#define RIGHT_ENCODER_B (6)
+#define LEFT_ENCODER_A (7)
+#define LEFT_ENCODER_B (8)
 
 //Define pressure switch
 #define PRESSURE_SWITCH (14)
@@ -106,25 +116,33 @@
 //Pneumatics Output//
 /////////////////////
 
+//Define Clutch Piston
+#define CLUTCH_PISTON (1)
 //Define Dumper ejection piston
-#define DUMPER_PISTON (1)
+#define DUMPER_PISTON_A (2)
+#define DUMPER_PISTON_B (3)
 
 /////////////////////////
 //TASK SPECIFIC DEFINES//
 /////////////////////////
 
 //Defines for TIM task
-#define TIM_ANGLE (60)
+#define TARGET_ANGLE (60)
 #define TIMMY_SPEED (.3)
 
 //Defines Used During Autonomous
-#define ALIGN_SPEED_CONST (.2)//was .5 
-#define FORWARD_SPEED (.2)//was .4
-#define ALIGNMENT_SPEED (.2)//was .5
+#define ALIGN_SPEED_CONST (.4)//was .5 
+#define FORWARD_SPEED (.6)//was .4
+#define ALIGNMENT_SPEED (.4)//was .5
 #define DEAD_ZONE (.25)//.25 ish works well
-#define DUMP_DISTANCE (24)
+#define DUMP_DISTANCE (20)
 #define MAX_SONAR_DIST (72)//Actually want 60" here, but robot is slow so added a foot.
-#define TURNSPEED (.25) // was .3
+#define TURNSPEED (.3) // was .3
 
+//Defines for dumper
+#define DUMPER_IN_POSITION ("InPosition")
+
+//Define for Robots current angle
+#define ROBOT_ANGLE ("Angle")
 
 

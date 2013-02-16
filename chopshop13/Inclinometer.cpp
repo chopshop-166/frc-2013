@@ -2,11 +2,11 @@
 *  Project   		: ChopShop13
 *  File Name  		: Inclinometer.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
+*  Creation Date	: January 18, 2013
 *  File Description	: Template source file for tasks, with template functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ unsigned int InclinometerLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Inclinometer166::Inclinometer166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_B)	//Not Confirmed Numbers
+Inclinometer166::Inclinometer166(void):Inclinometer(INCLINOMETER_A,INCLINOMETER_B)	
 {
 	Start((char *)"166InclinometerTask", INCLINOMETER_CYCLE_TIME);
 	// ^^^ Rename those ^^^
@@ -123,13 +123,13 @@ int Inclinometer166::Main(int a2, int a3, int a4, int a5,
 	Inclinometer.Start();
 		
     // General main loop (while in Autonomous or Tele mode)
-	proxy->add("Angle");
+	proxy->add(ROBOT_ANGLE);
 	while (true) {
 		// <<CHANGEME>>
 		// Insert your own logic here
 		
 		incangle=Inclinometer.Get();
-		proxy->set("Angle",incangle);
+		proxy->set(ROBOT_ANGLE,incangle);
         // Logging any values
 		// <<CHANGEME>>
 		// Make this match the declaraction above

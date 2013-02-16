@@ -1,12 +1,12 @@
 /*******************************************************************************
-*  Project   		: chopshop13
+*  Project   		: Chopshop13
 *  File Name  		: TIM.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
+*  Creation Date	: January 18, 2013
 *  File Description	: Template header file for tasks, with template functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 #pragma once
@@ -18,7 +18,7 @@
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
 
-#define TIM_CYCLE_TIME (10) // 10ms
+#define TIM_CYCLE_TIME (50) // 10ms
 
 
 class TIM166 : public Team166Task

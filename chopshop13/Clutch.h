@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Project   		: chopshop13
+*  Project   		: Chopshop13
 *  File Name  		: Clutch.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 27, 2013
@@ -42,7 +42,8 @@ private:
 	//Declare Proxy and Robot handles
 	Proxy *proxy;				// Handle to proxy
 	Robot *lHandle;            // Local handle
-	
+	float clutch_btnl;	
+	float clutch_btnr;
 	// Any variables that the task has as members go here
 	Solenoid *clutch;
 };

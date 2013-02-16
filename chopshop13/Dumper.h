@@ -1,12 +1,12 @@
 /*******************************************************************************
-*  Project   		: Framework
-*  File Name  		: TaskDumper.h     
+*  Project   		: Chopshop13
+*  File Name  		: Dumper.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
+*  Creation Date	: January 18, 2013
 *  File Description	: Dumper header file for tasks, with template functions
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 #pragma once
@@ -17,12 +17,10 @@
 //
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
-// You should rename this when you copy it into a new file
-// <<CHANGEME>>
-#define DUMPER_CYCLE_TIME (50) // 50ms
 
-// Rename this, too, or you'll run into collisions
-// <<CHANGEME>>
+#define DUMPER_CYCLE_TIME (50) // 50ms
+#define ROTATE_SPEED (.2)
+
 class Dumper166 : public Team166Task
 {
 	
@@ -42,25 +40,25 @@ private:
 	//Declare Proxy and Robot handles
 	Proxy *proxy;				// Handle to proxy
 	Robot *lHandle;            // Local handle
-	
-	
-	
+
 	
 	Victor DumperMotorA;
-	DigitalInput DumpLimit;
-	Solenoid DumperPiston;
+	DigitalInput IndentLimit;
+	DigitalInput BottomLimit;
+	DoubleSolenoid DumperPiston;
 	
 	float RotateSpeed;
 	
 	//Location of dumper
 	enum location {
-		Storage,
-		Loading,
-		Dumping,
-		Pyramid
+		kStorage,
+		kLoading,
+		kDumping,
+		kPyramid
 	};
-	location CurPosition;
+	location TargetPosition;
 	location OldPosition;
 	int Blips;
-	int Clicked;
+	int indent;
+	int first_transition;
 };

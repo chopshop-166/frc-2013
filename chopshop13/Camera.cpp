@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Project   		: chopshop13
+*  Project   		: Chopshop13
 *  File Name  		: Camera.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 27, 2013
@@ -209,7 +209,7 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 				ar = TARGET_WIDTH / TARGET_HEIGHT;//calculate the final target's a-s
 				
 				//USE THIS PRINTF TO DEBUG CHOOSING CORRECT TARGET
-				//printf("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\r", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
+				DPRINTF("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\r", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
 				
 				VALID_IMAGE = 1;//tell everyone we have a target
 				

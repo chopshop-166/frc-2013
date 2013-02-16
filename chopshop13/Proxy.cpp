@@ -1,12 +1,12 @@
 /*******************************************************************************
-*  Project   		: Framework
+*  Project   		: Chopshop13
 *  File Name  		: Proxy.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
-*  Creation Date	: January 18, 2010
+*  Creation Date	: January 18, 2013
 *  File Description	: Code for Proxy class to hold shared variables
 *******************************************************************************/ 
 /*----------------------------------------------------------------------------*/
-/*  Copyright (c) MHS Chopshop Team 166, 2010.  All Rights Reserved.          */
+/*  Copyright (c) MHS Chopshop Team 166, 2013.  All Rights Reserved.          */
 /*----------------------------------------------------------------------------*/
 
 #include "WPILib.h"
