@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Project   		: ChopShop 13
+*  Project   		: Chopshop13
 *  File Name  		: Autonomous.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 26, 2013

@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Project   		: chopshop13
+*  Project   		: Chopshop13
 *  File Name  		: FrontSonar.cpp     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 30, 2013

@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Project   		: chopshop13
+*  Project   		: Chopshop13
 *  File Name  		: Clutch.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: January 27, 2013

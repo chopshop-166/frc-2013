@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  Project   		: ChopShop13
+*  Project   		: Chopshop13
 *  File Name  		: Arm.h     
 *  Owner		   	: Software Group (FIRST Chopshop Team 166)
 *  Creation Date	: February 2, 2013
