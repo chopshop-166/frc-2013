@@ -64,7 +64,7 @@ AutonomousTask::AutonomousTask() {
 	        	   
 	           case ALIGNING: //points the robot towards the goal using an offset provided by the camera
 	        	   if( (fabs(OffsetValue) >= DEAD_ZONE) && (proxy->get("Valid_Image") == 1) ){
-   		        	  AlignSpeedAlign = OffsetValue * ALIGN_SPEED_CONST;		   
+   		        	  AlignSpeedAlign = min(fabs(OffsetValue * ALIGN_SPEED_CONST), MIN_SPEED_ALIGN) * (OffsetValue/fabs(OffsetValue));		   
    		        	  	  proxy->set(JOY_LEFT_Y, -AlignSpeedAlign);
    		        	  	  proxy->set(JOY_RIGHT_Y, AlignSpeedAlign);}
    	        	   else{
@@ -77,11 +77,11 @@ AutonomousTask::AutonomousTask() {
    	        	   break;
 	        	   
 	           case DRIVE2: //drives the robot towards the goal, while still aligning
-	        	   	   DRIVE2_GAIN = min((SonarDistance - DUMP_DISTANCE)/ 12,1);
+	        	   	   DRIVE2_GAIN = min((SonarDistance - DUMP_DISTANCE)/ 36.0,1);
 		        	   if (SonarDistance > DUMP_DISTANCE){
 		        			   AlignSpeed = OffsetValue * ALIGN_SPEED_CONST; //Speed the robot aligns at, proportional
-		        			   proxy->set(JOY_LEFT_Y, -AlignSpeed - (FORWARD_SPEED * DRIVE2_GAIN));
-			        	   	   proxy->set(JOY_RIGHT_Y, AlignSpeed - (FORWARD_SPEED * DRIVE2_GAIN));}
+		        			   proxy->set(JOY_LEFT_Y, -AlignSpeed - min(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+			        	   	   proxy->set(JOY_RIGHT_Y, AlignSpeed - min(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));}
 		        	   else{
 		        		   	proxy->set(JOY_LEFT_Y, 0); //Stops robot
 		        		   	proxy->set(JOY_RIGHT_Y, 0); //Stops robot   
