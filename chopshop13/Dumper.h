@@ -43,7 +43,7 @@ private:
 
 	
 	Victor DumperMotorA;
-	DigitalInput DumpLimit;
+	DigitalInput IndentLimit;
 	DigitalInput BottomLimit;
 	DoubleSolenoid DumperPiston;
 	

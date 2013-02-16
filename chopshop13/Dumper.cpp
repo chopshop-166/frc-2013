@@ -81,8 +81,15 @@ unsigned int DumperLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Dumper166::Dumper166(void):DumperMotorA(MOTOR_DUMPER_A),
-		DumpLimit(DUMPER_LIMIT),
+Dumper166::Dumper166(void):
+		DumperMotorA(MOTOR_DUMPER_A),
+		//State				Switch	SW
+		//Indent 			Open 	1
+		//Not in indent		Closed	0
+		IndentLimit(DUMPER_LIMIT),
+		//State				Switch	SW
+		//Storage			Open	1
+		//Not Storage		Closed	0
 		BottomLimit(DUMPER_BOTTOM_LIMIT),
 		DumperPiston(DUMPER_PISTON_A, DUMPER_PISTON_B)
 {
@@ -131,7 +138,7 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
 		//Reset Clicked if necessary
-		if ((indent == 1) && (DumpLimit.Get()==1)) {
+		if ((indent == 1) && (IndentLimit.Get()==1)) {
 			indent = 0;
 		}
 		
@@ -146,6 +153,9 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 		} else if (proxy->get(JOY_COPILOT_LOAD)){
 			OldPosition = TargetPosition;
 			TargetPosition = kLoading;
+			if (OldPosition == kDumping) {
+				TargetPosition = kLoading;
+			}
 			//Calculate number of indents we must pass through
 			Blips = TargetPosition - OldPosition;
 			DPRINTF(LOG_DEBUG,"Loading");
@@ -155,13 +165,10 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 			TargetPosition = kDumping;
 			//Calculate number of indents we must pass through
 			Blips = TargetPosition - OldPosition;
-			if (Blips == 2) {
-				TargetPosition = kStorage;
-			}
 			DPRINTF(LOG_DEBUG,"Dumping");
 		}
 		//If we weren't previously in an indent, and now we are set indent, transition
-		if ((indent == 0) && (DumpLimit.Get()==0)) {
+		if ((indent == 0) && (IndentLimit.Get()==0)) {
 			indent = 1;
 			first_transition = 1;
 		}
@@ -196,7 +203,7 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 			DPRINTF(LOG_DEBUG, "Storing or we're there!!!!");
 			proxy->set(DUMPER_IN_POSITION, 0);
 		}
-		DPRINTF(LOG_DEBUG,"Limit: %d Indent: %d State: %d Blip: %d", DumpLimit.Get(), indent, TargetPosition, BottomLimit.Get());
+		DPRINTF(LOG_DEBUG,"Limit: %d Indent: %d State: %d Blip: %d", IndentLimit.Get(), indent, TargetPosition, BottomLimit.Get());
 		//Set Motors to move
 		DumperMotorA.Set(RotateSpeed);
 		
