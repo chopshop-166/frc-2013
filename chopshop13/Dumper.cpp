@@ -137,7 +137,7 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 	proxy->set(DUMPER_IN_POSITION, 0);
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-		//Reset Clicked if necessary
+		//Check if we're outside of an indent
 		if ((indent == 1) && (IndentLimit.Get()==1)) {
 			indent = 0;
 		}
@@ -146,8 +146,6 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 		if (proxy->get(JOY_COPILOT_STORE)) {
 			OldPosition = TargetPosition;
 			TargetPosition = kStorage;
-			//Calculate number of indents we must pass through
-			Blips = TargetPosition - OldPosition;
 			DPRINTF(LOG_DEBUG,"Storing");
 			//Going to loading position
 		} else if (proxy->get(JOY_COPILOT_LOAD)){
@@ -167,6 +165,7 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 			Blips = TargetPosition - OldPosition;
 			DPRINTF(LOG_DEBUG,"Dumping");
 		}
+		
 		//If we weren't previously in an indent, and now we are set indent, transition
 		if ((indent == 0) && (IndentLimit.Get()==0)) {
 			indent = 1;
@@ -179,16 +178,13 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 		//If we are going to storage and not there, go to it
 		} else if((TargetPosition == kStorage) && (BottomLimit.Get() == 0)) {
 			RotateSpeed = -ROTATE_SPEED;
-		//Going to storage and their, stop moving
-		} else if ((TargetPosition == kStorage) && (BottomLimit.Get())) {
+		//Going to storage and there, stop moving
+		} else if ((TargetPosition == kStorage) && (BottomLimit.Get() == 1)) {
 			Blips = 0;
 			RotateSpeed = 0;
-		//Need to move backwards
-		} else if (Blips < 0) {
-			Blips += first_transition;
-			RotateSpeed =-ROTATE_SPEED;
 		//Need to move forwards
 		} else if (Blips > 0) {
+			//We found an indent
 			Blips -= first_transition;
 			RotateSpeed = ROTATE_SPEED;
 		//We are where we want to be. 
@@ -203,6 +199,7 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 			DPRINTF(LOG_DEBUG, "Storing or we're there!!!!");
 			proxy->set(DUMPER_IN_POSITION, 0);
 		}
+		
 		DPRINTF(LOG_DEBUG,"Limit: %d Indent: %d State: %d Blip: %d", IndentLimit.Get(), indent, TargetPosition, BottomLimit.Get());
 		//Set Motors to move
 		DumperMotorA.Set(RotateSpeed);
