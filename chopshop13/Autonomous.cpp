@@ -37,13 +37,24 @@ AutonomousTask::AutonomousTask() {
 		int Valid_Image = int(proxy->get("Valid_Image"));//Get whether the camera has a valid target
 		
 		//USE THIS PRINTF TO DEBUG ALL OF AUTO.
-		printf("State: %d  Offset: %f Image: %d Distance: %f\r", state, OffsetValue, Valid_Image, SonarDistance);
+		printf("State: %d  Offset: %f Image: %d Distance: %f Gain: %f\r", state, OffsetValue, Valid_Image, SonarDistance,DRIVE2_GAIN);
 		
 		switch(state){
 	           case INIT: 
 	        	   lHandle->DriverStationDisplay("We are Initializing");
 	        	   if (SonarDistance != 0.0){//Make sure we have a output from sonar sensor
 	        		   state = DRIVE1;}//goto next state
+	        	   if ((Valid_Image == 1) && (OffsetValue > 0))
+	        	   {
+	        		   MAX_SONAR_DIST = MAX_SONAR_DIST_RIGHT;
+	        		   //right side
+	        	   }
+	        	   else
+	        	   {
+	        		   MAX_SONAR_DIST = MAX_SONAR_DIST_LEFT;
+	        		   //left side
+	        	   }
+	        			   
 	        	   break;
 	        	   
 	           case DRIVE1:
@@ -64,7 +75,7 @@ AutonomousTask::AutonomousTask() {
 	        	   
 	           case ALIGNING: //points the robot towards the goal using an offset provided by the camera
 	        	   if( (fabs(OffsetValue) >= DEAD_ZONE) && (proxy->get("Valid_Image") == 1) ){
-   		        	  AlignSpeedAlign = min(fabs(OffsetValue * ALIGN_SPEED_CONST), MIN_SPEED_ALIGN) * (OffsetValue/fabs(OffsetValue));		   
+   		        	  AlignSpeedAlign = max(fabs(OffsetValue * ALIGN_SPEED_CONST), MIN_SPEED_ALIGN) * (OffsetValue/fabs(OffsetValue));		   
    		        	  	  proxy->set(JOY_LEFT_Y, -AlignSpeedAlign);
    		        	  	  proxy->set(JOY_RIGHT_Y, AlignSpeedAlign);}
    	        	   else{
@@ -77,11 +88,11 @@ AutonomousTask::AutonomousTask() {
    	        	   break;
 	        	   
 	           case DRIVE2: //drives the robot towards the goal, while still aligning
-	        	   	   DRIVE2_GAIN = min((SonarDistance - DUMP_DISTANCE)/ 36.0,1);
+	        	   	   DRIVE2_GAIN = min((SonarDistance - DUMP_DISTANCE)/ 48.0,1.0);
 		        	   if (SonarDistance > DUMP_DISTANCE){
 		        			   AlignSpeed = OffsetValue * ALIGN_SPEED_CONST; //Speed the robot aligns at, proportional
-		        			   proxy->set(JOY_LEFT_Y, -AlignSpeed - min(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
-			        	   	   proxy->set(JOY_RIGHT_Y, AlignSpeed - min(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));}
+		        			   proxy->set(JOY_LEFT_Y, -AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+			        	   	   proxy->set(JOY_RIGHT_Y, AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));}
 		        	   else{
 		        		   	proxy->set(JOY_LEFT_Y, 0); //Stops robot
 		        		   	proxy->set(JOY_RIGHT_Y, 0); //Stops robot   
@@ -89,7 +100,7 @@ AutonomousTask::AutonomousTask() {
 	 	 	 	   break;
 	 	 	 	   
 	 	 	   case DUMP: //when at the proper distance, activate dump button
-	 	 		   proxy->set(JOY_COPILOT_DUMP,1);
+	 	 		   proxy->set(JOY_COPILOT_DUMP_TRACK,1);
 	 	 		   if (proxy->get(DUMPER_IN_POSITION))
 	 	 		   {
 	 	 			   proxy->set(JOY_COPILOT_EJECT,1);
@@ -102,6 +113,8 @@ AutonomousTask::AutonomousTask() {
 		Wait(AUTONOMOUS_WAIT_TIME);
 	}
 	state = INIT;
+	//proxy->set(JOY_COPILOT_DUMP_TRACK,0);
+	//proxy->set(JOY_COPILOT_EJECT,0);
 	
 }
 

@@ -56,8 +56,11 @@
 #define JOY_COPILOT_ROTATE ("joy3y")
 
 #define JOY_COPILOT_STORE	("joy3b4n")
+#define JOY_COPILOT_STORE_TRACK	("joy3b4")
 #define JOY_COPILOT_LOAD	("joy3b2n")
+#define JOY_COPILOT_LOAD_TRACK	("joy3b2")
 #define JOY_COPILOT_DUMP	("joy3b1n")
+#define JOY_COPILOT_DUMP_TRACK	("joy3b1")
 #define JOY_COPILOT_DUMP_PYRAMID ("joy3b3")
 //Frisbee eject trigger
 #define JOY_COPILOT_EJECT ("joy3b6")
@@ -131,16 +134,16 @@
 #define TIMMY_SPEED (.3)
 
 //Defines Used During Autonomous
-#define ALIGN_SPEED_CONST (.4)//was .5 
+#define ALIGN_SPEED_CONST (.5)//was .5 
 #define FORWARD_SPEED (.6)//was .4
 #define ALIGNMENT_SPEED (.4)//was .5
 #define DEAD_ZONE (.2)
-#define DUMP_DISTANCE (20)
-#define MAX_SONAR_DIST (72)//Actually want 60" here, but robot is slow so added a foot.
+#define DUMP_DISTANCE (22)
 #define TURNSPEED (.3) // was .3
-#define MIN_SPEED (.2)
-#define MIN_SPEED_ALIGN (.2)
-
+#define MIN_SPEED (.21)
+#define MIN_SPEED_ALIGN (.3)
+#define MAX_SONAR_DIST_LEFT (100)
+#define MAX_SONAR_DIST_RIGHT (72)
 
 //Defines for dumper
 #define DUMPER_IN_POSITION ("InPosition")

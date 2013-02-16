@@ -30,4 +30,5 @@ public:
 	float AlignSpeedAlign;//speed one side is set to in alignment stage
 	float SonarDistance; // distnace from the sonar sensor
 	float DRIVE2_GAIN; //Gain for slowing down as we get closer to the target in DRIVE2
+	float MAX_SONAR_DIST;
 };

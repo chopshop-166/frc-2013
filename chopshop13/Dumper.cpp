@@ -13,7 +13,7 @@
 #include "Dumper.h"
 
 // To locally enable debug printing: set true, to disable false
-#define DPRINTF if(true)dprintf
+#define DPRINTF if(false)dprintf
 
 // Sample in memory buffer
 struct abuf
@@ -88,8 +88,8 @@ Dumper166::Dumper166(void):
 		//Not in indent		Closed	0
 		IndentLimit(DUMPER_LIMIT),
 		//State				Switch	SW
-		//Storage			Open	1
-		//Not Storage		Closed	0
+		//Storage			Closed	0
+		//Not Storage		Open	1
 		BottomLimit(DUMPER_BOTTOM_LIMIT),
 		DumperPiston(DUMPER_PISTON_A, DUMPER_PISTON_B)
 {
@@ -128,9 +128,9 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
 	//Track the buttons for various positions
-	proxy->TrackNewpress("joy3b4");
-	proxy->TrackNewpress("joy3b2");
-	proxy->TrackNewpress("joy3b1");
+	proxy->TrackNewpress(JOY_COPILOT_STORE_TRACK);
+	proxy->TrackNewpress(JOY_COPILOT_LOAD_TRACK);
+	proxy->TrackNewpress(JOY_COPILOT_DUMP_TRACK);
 	// Add value saying we're in position
 	proxy->add(DUMPER_IN_POSITION);
 	//Default this value to 0... don't remember if proxy does this
@@ -148,9 +148,12 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 			TargetPosition = kStorage;
 			DPRINTF(LOG_DEBUG,"Storing");
 			//Going to loading position
+		} else if (Blips != 0) {
+			DPRINTF(LOG_DEBUG, "STILL MOVING!");
 		} else if (proxy->get(JOY_COPILOT_LOAD)){
 			OldPosition = TargetPosition;
 			TargetPosition = kLoading;
+			//Prevent us from going from dumping to loading
 			if (OldPosition == kDumping) {
 				TargetPosition = kLoading;
 			}
@@ -200,7 +203,7 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 			proxy->set(DUMPER_IN_POSITION, 0);
 		}
 		
-		DPRINTF(LOG_DEBUG,"Limit: %d Indent: %d State: %d Blip: %d", IndentLimit.Get(), indent, TargetPosition, BottomLimit.Get());
+		DPRINTF(LOG_DEBUG,"Limit: %d Indent: %d State: %d Bottom limit: %d", IndentLimit.Get(), indent, TargetPosition, BottomLimit.Get());
 		//Set Motors to move
 		DumperMotorA.Set(RotateSpeed);
 		

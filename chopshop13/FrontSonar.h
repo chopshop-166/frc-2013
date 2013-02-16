@@ -24,7 +24,7 @@
 class FrontSonar166 : public Team166Task
 {
 	#define SONAR_CYCLE_TIME (50) 
-	#define AVERAGESIZE (3)   //The size of the rolling average for the sonar sensor.    
+	#define AVERAGESIZE (2)   //The size of the rolling average for the sonar sensor.    
 	#define SONARINPERVOLT (102.4)   //The magical conversion rate from volts to inches
 public:
 	

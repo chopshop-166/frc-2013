@@ -19,7 +19,7 @@
 // of miliseconds. Max allowed time is 999 miliseconds.
 
 #define DUMPER_CYCLE_TIME (50) // 50ms
-#define ROTATE_SPEED (.2)
+#define ROTATE_SPEED (.3)
 
 class Dumper166 : public Team166Task
 {
