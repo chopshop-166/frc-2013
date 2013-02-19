@@ -18,7 +18,7 @@
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
 
-#define TIM_CYCLE_TIME (50) // 10ms
+#define TIM_CYCLE_TIME (50) // 50ms
 
 
 class TIM166 : public Team166Task
@@ -42,7 +42,6 @@ private:
 	Robot *lHandle;            // Local handle-
 	Victor LittleArm;		//TIM's little arm
 	DigitalInput LimitA;
-	DigitalInput LimitB;
 	
 	// Any variables that the task has as members go here
 	// <<CHANGEME>>
