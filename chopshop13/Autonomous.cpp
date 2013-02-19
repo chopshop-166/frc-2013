@@ -80,7 +80,10 @@ AutonomousTask::AutonomousTask() {
    		        	  	  proxy->set(JOY_RIGHT_Y, AlignSpeedAlign);}
    	        	   else{
    	        		   if( (fabs(OffsetValue) < DEAD_ZONE) && (proxy->get("Valid_Image") == 1) ){//If we are within a certain amount of the center of the target, and we have a target, goto next state
-   	        		   	   state = DRIVE2;}
+   	        		   	   state = DRIVE2;
+   	        		   	   proxy->set(JOY_LEFT_Y, 0);
+   	        		   	   proxy->set(JOY_RIGHT_Y, 0);
+   	        		   }
    	        		   if (proxy->get("Valid_Image") == 0){//We we don't have an image at this point, stop the robot(somthing went wrong)
    	        			   proxy->set(JOY_LEFT_Y, 0);
    	        			   proxy->set(JOY_RIGHT_Y, 0);}}
@@ -89,14 +92,27 @@ AutonomousTask::AutonomousTask() {
 	        	   
 	           case DRIVE2: //drives the robot towards the goal, while still aligning
 	        	   	   DRIVE2_GAIN = min((SonarDistance - DUMP_DISTANCE)/ 48.0,1.0);
-		        	   if (SonarDistance > DUMP_DISTANCE){
-		        			   AlignSpeed = OffsetValue * ALIGN_SPEED_CONST; //Speed the robot aligns at, proportional
-		        			   proxy->set(JOY_LEFT_Y, -AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
-			        	   	   proxy->set(JOY_RIGHT_Y, AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));}
-		        	   else{
+		        	   if (SonarDistance > DUMP_DISTANCE)
+		        	   {
+		        		   	   if (Valid_Image == 0)
+		        		   	   {
+		        		   		  AlignSpeed = 0;
+		        		   		  proxy->set(JOY_LEFT_Y, -AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+		        		   		  proxy->set(JOY_RIGHT_Y, AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+		        		   	   }
+		        		   	   else
+		        		   	   {
+		        		   		   AlignSpeed = OffsetValue * ALIGN_SPEED_CONST; //Speed the robot aligns at, proportional
+		        		   		   proxy->set(JOY_LEFT_Y, -AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+		        		   		   proxy->set(JOY_RIGHT_Y, AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+		        	   	   	   }
+					   }
+		        	   else
+		        	   {
 		        		   	proxy->set(JOY_LEFT_Y, 0); //Stops robot
 		        		   	proxy->set(JOY_RIGHT_Y, 0); //Stops robot   
-		        		   	state = DUMP;}
+		        		   	state = DUMP;
+		        	   }
 	 	 	 	   break;
 	 	 	 	   
 	 	 	   case DUMP: //when at the proper distance, activate dump button
@@ -111,10 +127,9 @@ AutonomousTask::AutonomousTask() {
         	   
 
 		Wait(AUTONOMOUS_WAIT_TIME);
+		proxy->set("AUTO_STATE",state);
 	}
 	state = INIT;
-	//proxy->set(JOY_COPILOT_DUMP_TRACK,0);
-	//proxy->set(JOY_COPILOT_EJECT,0);
 	
 }
 
