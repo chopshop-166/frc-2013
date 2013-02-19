@@ -50,6 +50,18 @@ private:
 	Victor motorR2;
 	Victor motorR3;
 	
+	bool AutoDump1;
+	bool AutoDump2;
+	
+	//The "D" at the end incicates these variables are in Drive not Autonomous
+	float OffsetValueD; // The offset of the goal in degrees, positive or negative, provided by camera
+	float FrontDistanceD;  // The distance the robot is from the wall, provided by distance sensor
+	float AlignSpeedD; // The speed that one side is set to when it needs to speed up, proportional
+	float OffsetValueAlignD;//offset of goal in alignment stage
+	float SonarDistanceD; // distnace from the sonar sensor
+	float DRIVE2_GAIN_D; //Gain for slowing down as we get closer to the target in DRIVE2
+	int Valid_Image_D;
+
 	// Any variables that the task has as members go here
 	// <<CHANGEME>>
 };

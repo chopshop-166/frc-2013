@@ -62,6 +62,12 @@
 #define JOY_COPILOT_DUMP	("joy3b1n")
 #define JOY_COPILOT_DUMP_TRACK	("joy3b1")
 #define JOY_COPILOT_DUMP_PYRAMID ("joy3b3")
+
+//Auto dump activation
+#define JOY_AUTO_DUMP_1 ("joy1b1n")
+#define JOY_AUTO_DUMP_2 ("joy2b1n")
+
+
 //Frisbee eject trigger
 #define JOY_COPILOT_EJECT ("joy3b6")
 
