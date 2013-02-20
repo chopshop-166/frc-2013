@@ -134,32 +134,31 @@ int Drive::Main(int a2, int a3, int a4, int a5,
 		AutoDump1 = proxy->get(JOY_AUTO_DUMP_1);
 		AutoDump2 = proxy->get(JOY_AUTO_DUMP_2);
 		
-		OffsetValueD = proxy->get ("TargetOffset"); //Get the offset of the target from the center of the target(camera)
-		SonarDistanceD = proxy->get ("Sonar_Distance");//Get output from sonar sensor
-		Valid_Image_D = (proxy->get("Valid_Image"));//Get whether the camera has a valid target
-		
-		if(AutoDump1 || AutoDump2 && Valid_Image_D){
-			if (SonarDistanceD > DUMP_DISTANCE){
-	   		   AlignSpeedD = OffsetValueD * ALIGN_SPEED_CONST; //Speed the robot aligns at, proportional
-	   		   proxy->set(JOY_LEFT_Y, -AlignSpeedD - max(FORWARD_SPEED * DRIVE2_GAIN_D,MIN_SPEED));
-	   		   proxy->set(JOY_RIGHT_Y, AlignSpeedD - max(FORWARD_SPEED * DRIVE2_GAIN_D,MIN_SPEED));  	   	   
-		    	}
-    	   else{
-    		   	proxy->set(JOY_LEFT_Y, 0); //Stops robot
-    		   	proxy->set(JOY_RIGHT_Y, 0); //Stops robot
-    		   	
-    		   	proxy->set(JOY_COPILOT_DUMP_TRACK,1);//Activate dumper
-    		   	
- 	 		    if (proxy->get(DUMPER_IN_POSITION)){//When dumper is fully activated, eject discs{ 
- 	 			   proxy->set(JOY_COPILOT_EJECT,1);
- 	 		    	}
-    	   		}
-		}
-		
-		
+		OffsetValue = proxy->get ("TargetOffset"); //Get the offset of the target from the center of the target(camera)
+		SonarDistance = proxy->get ("Sonar_Distance");//Get output from sonar sensor
+		Valid_Image = int(proxy->get("Valid_Image"));//Get whether the camera has a valid target
+		DRIVE2_GAIN = min((SonarDistance - DUMP_DISTANCE)/ 48.0,1.0);
+
 		joylefty = proxy->get(JOY_LEFT_Y);
 		joyrighty = proxy->get(JOY_RIGHT_Y);
 		
+		if(AutoDump1 || AutoDump2){	
+			if (SonarDistance > DUMP_DISTANCE)
+			{
+				if (Valid_Image == 0)
+				{
+					AlignSpeed = 0;
+					proxy->set(JOY_LEFT_Y, -AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+					proxy->set(JOY_RIGHT_Y, AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+				}
+				else
+				{
+					AlignSpeed = OffsetValue * ALIGN_SPEED_CONST; //Speed the robot aligns at, proportional
+					proxy->set(JOY_LEFT_Y, -AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+					proxy->set(JOY_RIGHT_Y, AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED));
+				}
+			}
+		}
 		
 		motorL1.Set(joylefty);
 		motorL2.Set(joylefty);

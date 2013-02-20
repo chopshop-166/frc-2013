@@ -18,7 +18,7 @@
 // of miliseconds. Max allowed time is 999 miliseconds.
 // You should rename this when you copy it into a new file
 // <<CHANGEME>>
-#define DRIVE_CYCLE_TIME (10) // 10ms
+#define DRIVE_CYCLE_TIME (50) // 10ms
 
 // Rename this, too, or you'll run into collisions
 // <<CHANGEME>>
@@ -54,13 +54,13 @@ private:
 	bool AutoDump2;
 	
 	//The "D" at the end incicates these variables are in Drive not Autonomous
-	float OffsetValueD; // The offset of the goal in degrees, positive or negative, provided by camera
-	float FrontDistanceD;  // The distance the robot is from the wall, provided by distance sensor
-	float AlignSpeedD; // The speed that one side is set to when it needs to speed up, proportional
-	float OffsetValueAlignD;//offset of goal in alignment stage
-	float SonarDistanceD; // distnace from the sonar sensor
-	float DRIVE2_GAIN_D; //Gain for slowing down as we get closer to the target in DRIVE2
-	int Valid_Image_D;
+	float OffsetValue; // The offset of the goal in degrees, positive or negative, provided by camera
+	float FrontDistance;  // The distance the robot is from the wall, provided by distance sensor
+	float AlignSpeed; // The speed that one side is set to when it needs to speed up, proportional
+	float OffsetValueAlign;//offset of goal in alignment stage
+	float SonarDistance; // distnace from the sonar sensor
+	float DRIVE2_GAIN; //Gain for slowing down as we get closer to the target in DRIVE2
+	int Valid_Image;
 
 	// Any variables that the task has as members go here
 	// <<CHANGEME>>
