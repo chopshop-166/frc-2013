@@ -87,7 +87,7 @@ unsigned int TIMLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-TIM166::TIM166(void):LittleArm(TIM_ID),LimitA(INCLINER_LIMIT_A),LimitB(INCLINER_LIMIT_B)
+TIM166::TIM166(void):LittleArm(TIM_ID),LimitA(INCLINER_LIMIT_A)
 {
 	Start((char *)"166TIMTask", TIM_CYCLE_TIME);
 	// ^^^ Rename those ^^^
@@ -122,27 +122,13 @@ int TIM166::Main(int a2, int a3, int a4, int a5,
 	
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-		timmyinfo=proxy->get(ROBOT_ANGLE);
-		
-		//timmyspeed = proxy->get(JOYTIM_Y);
-		//printf("Angle: %f\r",timmyinfo);
-		
-		//Adjust TIM's arm to meet the required angle
-		
-		if(timmyinfo<TARGET_ANGLE)
-			timmyspeed=TIMMY_SPEED;
-		if(timmyinfo>TARGET_ANGLE)
-			timmyspeed=-TIMMY_SPEED;
-		else
-			timmyspeed=0;
-		 
+
+		timmyspeed = proxy->get(JOYTIM_Y);
 		//If timmy is smashing into the limit switch, bind his arm
-		if(LimitA.Get()&&timmyspeed>0)
-			timmyspeed=0;
-		if(LimitB.Get()&&timmyspeed<0)
-			timmyspeed=0;
 		
-		timmyspeed = proxy->get("joy3y");
+		if((LimitA.Get()) && (timmyspeed <= 0))
+			timmyspeed=0;
+
 		LittleArm.Set(timmyspeed);
 		
         // Logging any values
