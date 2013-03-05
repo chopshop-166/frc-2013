@@ -39,11 +39,12 @@ AutonomousTask::AutonomousTask() {
 		int Valid_Image = int(proxy->get("Valid_Image"));//Get whether the camera has a valid target
 		
 		//USE THIS PRINTF TO DEBUG ALL OF AUTO.
-		printf("State: %d  Offset: %f Image: %d Distance: %f Gain: %f\r", state, OffsetValue, Valid_Image, SonarDistance,DRIVE2_GAIN);
+		//printf("State: %d  Offset: %f Image: %d Distance: %f Gain: %f\r", state, OffsetValue, Valid_Image, SonarDistance,DRIVE2_GAIN);
 		
 		switch(state){
 	           case INIT: 
 	        	   wait_count = 0;
+	        	   backup_count = 0;
 	        	   lHandle->DriverStationDisplay("We are Initializing");
 	        	   if (SonarDistance != 0.0){//Make sure we have a output from sonar sensor
 	        		   state = DRIVE1;}//goto next state
@@ -57,17 +58,16 @@ AutonomousTask::AutonomousTask() {
 	        		   MAX_SONAR_DIST = MAX_SONAR_DIST_LEFT;
 	        		   //left side
 	        	   }
-	        			   
 	        	   break;
 	        	   
 	           case DRIVE1:
-	        	   GyroOffset = min(fabs((GyroAngle) / 20.0),.15) * (-GyroAngle/fabs(GyroAngle));
+	        	   //GyroOffset = min(fabs((GyroAngle) / 20.0),.15) * (-GyroAngle/fabs(GyroAngle));
 	        	   if(SonarDistance > MAX_SONAR_DIST){//If we are farther away than desired, go forward
-	        		   proxy->set(JOY_LEFT_Y, -FORWARD_SPEED - GyroOffset);
-	        		   proxy->set(JOY_RIGHT_Y, -FORWARD_SPEED + GyroOffset);
+	        		   proxy->set(JOY_LEFT_Y, -FORWARD_SPEED);
+	        		   proxy->set(JOY_RIGHT_Y, -FORWARD_SPEED);
 	        	   }
 	        	   else{
-	        	   state = TURN;
+	        		   state = TURN;
 	        	   } //goto next state
 	        	   break;
 	        	   
@@ -87,15 +87,28 @@ AutonomousTask::AutonomousTask() {
    		        	  	  proxy->set(JOY_LEFT_Y, -AlignSpeedAlign);
    		        	  	  proxy->set(JOY_RIGHT_Y, AlignSpeedAlign);
 	        	   }
-   	        	   else{
-   	        		   if( (fabs(OffsetValue) < DEAD_ZONE) && (proxy->get("Valid_Image") == 1) ){//If we are within a certain amount of the center of the target, and we have a target, goto next state
+   	        	   else {
+   	        		   if( (fabs(OffsetValue) < DEAD_ZONE) && (proxy->get("Valid_Image") == 1) )
+   	        		   {
    	        		   	   state = DRIVE2;
    	        		   	   proxy->set(JOY_LEFT_Y, 0);
    	        		   	   proxy->set(JOY_RIGHT_Y, 0);
    	        		   }
-   	        		   if (proxy->get("Valid_Image") == 0){//We we don't have an image at this point, stop the robot(somthing went wrong)
-   	        			   proxy->set(JOY_LEFT_Y, 0);
-   	        			   proxy->set(JOY_RIGHT_Y, 0);}}
+   	        		   if (proxy->get("Valid_Image") == 0)
+   	        		   {
+   	        			   if (backup_count < 15)
+   	        			   {
+   	        				   backup_count = backup_count + 1;
+   	        				   proxy->set(JOY_LEFT_Y, .4);
+   	        			   	   proxy->set(JOY_RIGHT_Y, .4);
+   	        		   	   }
+   	        		   	   else
+   	        		   	   {
+   	        		   		   proxy->set(JOY_LEFT_Y, 0);
+   	        		   	   	   proxy->set(JOY_RIGHT_Y,0);
+   	        		   	   }
+   	        	   	   }
+   	        	   }
    	        	   
    	        	   break;
 	        	   
@@ -136,44 +149,41 @@ AutonomousTask::AutonomousTask() {
 					   state = TURN2;
 					   }
 				   }
-	 	 		   
 	 	 		   break;
 	 	 		   
 	 	 	 case TURN2:
 	 	 		wait_count = wait_count + 1;
-	 	 		if (wait_count < 10)
+	 	 		if (wait_count < 2)
 	 	 		{
 	 	 			proxy->set(JOY_LEFT_Y, FORWARD_SPEED);
 	 	 			proxy->set(JOY_RIGHT_Y, FORWARD_SPEED);  
 	 	 		}
-			   if (180.0 - GyroAngle > 0 )
+	 	 		else if (180.0 - GyroAngle > 0 )
 			   {
-				   GyroOffset = min(fabs((180.0 - GyroAngle) / 60.0),.27) * ((180.0 - GyroAngle)/fabs(180.0 - GyroAngle));
-				   if(GyroAngle > 180.0)
-				   {
-					   proxy->set(JOY_LEFT_Y,-GyroOffset);
-					   proxy->set(JOY_RIGHT_Y,GyroOffset);
-				   } 
+				  // GyroOffset = max(fabs((180.0 - GyroAngle) / 60.0),.27) * ((180.0 - GyroAngle)/fabs(180.0 - GyroAngle));
+				   proxy->set(JOY_LEFT_Y,-TURNSPEED);
+				   proxy->set(JOY_RIGHT_Y,TURNSPEED);
 			   }
 			   else
 			   {
 				   wait_count = 0;
 				   state = RUN;
+				   //Set buttons back to defaults
+				   proxy->set(JOY_COPILOT_DUMP_TRACK,0);
+				   proxy->set(JOY_COPILOT_EJECT,0);
 			   }
 			   
 			   
 			   break;
 			   
 		   case RUN:
+			   
 			   wait_count = wait_count + 1;
 			   GyroOffset = min(fabs((180.0 - GyroAngle) / 20.0),.15) * ((180.0 - GyroAngle)/fabs(180.0 - GyroAngle));
-			   if(SonarDistance > MAX_SONAR_DIST)
-			   {
+			   if (wait_count < 15) {
 				   proxy->set(JOY_LEFT_Y, -FORWARD_SPEED - GyroOffset);
 				   proxy->set(JOY_RIGHT_Y, -FORWARD_SPEED + GyroOffset);
-			   }
-			   if (wait_count > 60)
-			   {
+				} else {
 				 proxy->set(JOY_LEFT_Y,0);
 				 proxy->set(JOY_RIGHT_Y,0);
 			   }

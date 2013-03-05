@@ -9,7 +9,9 @@
 //
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
-#define CAMERA_CYCLE_TIME (100) // This is the max rate before you cause major lagging and unhappy robots
+#define CAMERA_CYCLE_TIME (50) // This is the max rate before you cause major lagging and unhappy robots
+
+
 
 class CameraTask : public Team166Task
 {
@@ -40,5 +42,7 @@ private:
 	float ar;
 	int entered_loop;
 	int set_brightness;
+	int Flip;
+	ColorImage *image;
 };
 	

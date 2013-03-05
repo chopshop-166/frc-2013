@@ -122,12 +122,13 @@ int Gyro166::Main(int a2, int a3, int a4, int a5,
 	proxy->add("GYROANGLE");
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-	
-		if (proxy->get("AUTO_STATE") == 0)
-		{
-			AutoGyro.Reset();
+		if(lHandle->IsAutonomous()) {
+			if (proxy->get("AUTO_STATE") == 0)
+			{
+				AutoGyro.Reset();
+			}		
 		}
-	
+		
 		proxy->set("GYROANGLE",AutoGyro.GetAngle());
 		//printf("Gryo: %f \r", AutoGyro.GetAngle());
 		sl.PutOne();

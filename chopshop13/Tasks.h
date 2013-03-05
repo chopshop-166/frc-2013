@@ -1,3 +1,4 @@
+
 // <<CHANGEME>>
 #pragma once
 // Declare your task objects here
@@ -10,3 +11,4 @@ TIM166 TIMObj;
 CameraTask CameraObject;
 FrontSonar166 SonarTask;
 Clutch166 ClutchObject;
+Gyro166	GyroObject;

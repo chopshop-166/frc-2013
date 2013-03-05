@@ -48,31 +48,29 @@
 #define JOY_LEFT_TRACK ("joy1b3")
 #define JOY_RIGHT_TRACK ("joy2b3")
 
-//Incline robot
-#define JOY_LEFT_INCLINE ("joy1b4")
-#define JOY_RIGHT_INCLINE ("joy2b4")
 
 //Control Position of Dumper
 #define JOY_COPILOT_ROTATE ("joy3y")
 
 #define JOY_COPILOT_STORE	("joy3b4n")
 #define JOY_COPILOT_STORE_TRACK	("joy3b4")
+
 #define JOY_COPILOT_LOAD	("joy3b2n")
 #define JOY_COPILOT_LOAD_TRACK	("joy3b2")
-#define JOY_COPILOT_DUMP	("joy3b1n")
-#define JOY_COPILOT_DUMP_TRACK	("joy3b1")
-#define JOY_COPILOT_DUMP_PYRAMID ("joy3b3")
+
+#define JOY_COPILOT_DUMP	("joy3b3n")
+#define JOY_COPILOT_DUMP_TRACK	("joy3b3")
+
 
 //Auto dump activation
 #define JOY_AUTO_DUMP_1 ("joy1b1n")
 #define JOY_AUTO_DUMP_2 ("joy2b1n")
 
-
 //Frisbee eject trigger
 #define JOY_COPILOT_EJECT ("joy3b6")
 
 //TIM's joystick control
-#define JOYTIM_Y ("joy4z")
+#define JOYTIM_Y ("joy3y")
 
 
 /////////////////
@@ -141,15 +139,15 @@
 
 //Defines Used During Autonomous
 #define ALIGN_SPEED_CONST (.5)//was .5 
-#define FORWARD_SPEED (.6)//was .4
-#define ALIGNMENT_SPEED (.4)//was .5
-#define DEAD_ZONE (.2)
-#define DUMP_DISTANCE (22)
-#define TURNSPEED (.3) // was .3
+#define FORWARD_SPEED (.6)
+#define ALIGNMENT_SPEED (.4)//was .4
+#define DEAD_ZONE (.2) // WAS .2
+#define DUMP_DISTANCE (16)
+#define TURNSPEED (.35) // was .3
 #define MIN_SPEED (.21)
-#define MIN_SPEED_ALIGN (.3)
-#define MAX_SONAR_DIST_LEFT (100)
-#define MAX_SONAR_DIST_RIGHT (72)
+#define MIN_SPEED_ALIGN (.2)
+#define MAX_SONAR_DIST_LEFT (95) //was 100
+#define MAX_SONAR_DIST_RIGHT (94)//was 72
 
 //Defines for dumper
 #define DUMPER_IN_POSITION ("InPosition")

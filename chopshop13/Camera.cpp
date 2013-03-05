@@ -129,122 +129,125 @@ int CameraTask::Main(int a2, int a3, int a4, int a5,
 	TARGET_HEIGHT = 0;
 	TARGET_WIDTH = 0;
 	set_brightness = 0;
+	Flip = 0;
 	ParticleAnalysisReport *target;//Define custom set of final particles used to decide the target
 	
 	particle_id = 0;
-	
+		
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
 		
 		if ((lHandle->IsAutonomous() == 0) && (set_brightness == 0)){ //Raise brightness for Tele-op so that humans can see stuff as well
-			camera.WriteBrightness(50);
+			camera.WriteBrightness(30);
 			set_brightness = 1;
 		}
-		
-		
-		
-		VALID_IMAGE = 0;
-		ColorImage *image = new ColorImage(IMAQ_IMAGE_HSL);//Create a new image variable of type ColorImage in HSL format
-		
-		camera.GetImage(image);//Get the image from the camera and save it into the image variable.
-		
-		iwidth = image->GetWidth();//The the image of the image we just got.
-		
-		//printf("Width: %d\r",iwidth);//Print the width of the image, DEBUG ONLY
-		
-		if (iwidth != 0)//Check to see if an image exists by checking width
-		{
-		entered_loop = 0;
-		BinaryImage *thresholdImage = image->ThresholdHSV(threshold);	// get just the red target pixels
-//   consider adding histogram to set lower end of V threshold
-		
-		
-		//OPTIONAL//BinaryImage *thresholdImage = image->ThresholdRGB(threshold);	// get just the green target pixels
-		
-		BinaryImage *bigObjectsImage = thresholdImage->RemoveSmallObjects(false, 2);  // remove small objects (noise)
-		BinaryImage *convexHullImage = bigObjectsImage->ConvexHull(false);  // fill in partial and full rectangles
-		BinaryImage *filteredImage = convexHullImage->ParticleFilter(criteria, 2);  // find the rectangles
-		vector<ParticleAnalysisReport> *reports = filteredImage->GetOrderedParticleAnalysisReports();  // get the results
-		
-		//IMAGE WRITES, USE FOR DEBUGGING
-		//image->Write("Original.png");
-		//bigObjectsImage->Write("Threshold.png");
-		//filteredImage->Write("Filtered.png");
-		
-		
-		for (unsigned i = 0; i < reports->size(); i++) {//This loop goes through all final particles
-				ParticleAnalysisReport *r = &(reports->at(i));
-				TARGET_HEIGHT = float(r->boundingRect.height);//get individual particle height
-				TARGET_WIDTH = float(r->boundingRect.width);//get individual particle width
-				ar = TARGET_WIDTH / TARGET_HEIGHT;//Calculate aspect ratio
-				if ((ar > .5) && (ar < 2.0))//Check if the shape is square-ish...
-				{
-					if (entered_loop == 1)
+	
+		if (Flip == 0) {
+			Flip = 1;
+			image = new ColorImage(IMAQ_IMAGE_HSL);//Create a new image variable of type ColorImage in HSL format	
+			camera.GetImage(image);//Get the image from the camera and save it into the image variable.
+					
+		} else {
+			Flip = 0;
+			VALID_IMAGE = 0;
+			
+			iwidth = image->GetWidth();//The the image of the image we just got.
+			
+			//printf("Width: %d\r",iwidth);//Print the width of the image, DEBUG ONLY
+			
+			if (iwidth != 0)//Check to see if an image exists by checking width
+			{
+				entered_loop = 0;
+				BinaryImage *thresholdImage = image->ThresholdHSV(threshold);	// get just the red target pixels
+		//   consider adding histogram to set lower end of V threshold
+				
+				
+				//OPTIONAL//BinaryImage *thresholdImage = image->ThresholdRGB(threshold);	// get just the green target pixels
+				
+				BinaryImage *bigObjectsImage = thresholdImage->RemoveSmallObjects(false, 2);  // remove small objects (noise)
+				BinaryImage *convexHullImage = bigObjectsImage->ConvexHull(false);  // fill in partial and full rectangles
+				BinaryImage *filteredImage = convexHullImage->ParticleFilter(criteria, 2);  // find the rectangles
+				vector<ParticleAnalysisReport> *reports = filteredImage->GetOrderedParticleAnalysisReports();  // get the results
+				
+				//IMAGE WRITES, USE FOR DEBUGGING
+				//image->Write("Original.png");
+				//bigObjectsImage->Write("Threshold.png");
+				//filteredImage->Write("Filtered.png");
+				
+				//This loop goes through all final particles
+				for (unsigned i = 0; i < reports->size(); i++) {
+					ParticleAnalysisReport *r = &(reports->at(i));
+					TARGET_HEIGHT = float(r->boundingRect.height);//get individual particle height
+					TARGET_WIDTH = float(r->boundingRect.width);//get individual particle width
+					ar = TARGET_WIDTH / TARGET_HEIGHT;//Calculate aspect ratio
+					if ((ar > .5) && (ar < 2.0))//Check if the shape is square-ish...
 					{
-						if (r->center_mass_y > target->center_mass_y)//Choose the lowest target
+						if (entered_loop == 1)
+						{
+							if (r->center_mass_y > target->center_mass_y)//Choose the lowest target
+							{
+								target = &(reports->at(i));
+								particle_id = i;
+							}
+						}
+						else
 						{
 							target = &(reports->at(i));
 							particle_id = i;
+							entered_loop = 1;
 						}
+					
+					}
+					//USE THIS PRINTF FOR DEBUG
+					//printf("particle: %d  (%d,%d)\r\n", i, r->center_mass_x, r->center_mass_y);
+					
+				}
+					
+					if ((reports->size() > 0) && (entered_loop == 1))
+					{
+						TARGET_OFFSET =(target->center_mass_x - 80) / 80.0;//calculate offset by subtracting half the width of the camera rez
+						TARGET_HEIGHT = float(target->boundingRect.height);//get the final targets height
+						TARGET_WIDTH = float(target->boundingRect.width);//get the final targets width
+						ar = TARGET_WIDTH / TARGET_HEIGHT;//calculate the final target's a-s
+						
+						//USE THIS PRINTF TO DEBUG CHOOSING CORRECT TARGET
+						DPRINTF("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\r", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
+						
+						VALID_IMAGE = 1;//tell everyone we have a target
+						
+						proxy->set("VALID_IMAGE",VALID_IMAGE);
+						proxy->set("TARGETOFFSET",TARGET_OFFSET);
 					}
 					else
 					{
-						target = &(reports->at(i));
-						particle_id = i;
-						entered_loop = 1;
+						VALID_IMAGE = 0;//tell everyone we wont have an image
+						proxy->set("VALID_IMAGE",VALID_IMAGE);
+						
+						//USE FOR DEBUGGING WHETHER A TARGET IS RECONIZED AND COMIC RELIEF
+						//printf("DANGER WILL ROBINSON!DANGER!");
 					}
+					
 				
-				}
-				//USE THIS PRINTF FOR DEBUG
-				//printf("particle: %d  (%d,%d)\r\n", i, r->center_mass_x, r->center_mass_y);
 				
-			}
-				
-			
-			if ((reports->size() > 0) && (entered_loop == 1))
-			{
-				TARGET_OFFSET =(target->center_mass_x - 80) / 80.0;//calculate offset by subtracting half the width of the camera rez
-				TARGET_HEIGHT = float(target->boundingRect.height);//get the final targets height
-				TARGET_WIDTH = float(target->boundingRect.width);//get the final targets width
-				ar = TARGET_WIDTH / TARGET_HEIGHT;//calculate the final target's a-s
-				
-				//USE THIS PRINTF TO DEBUG CHOOSING CORRECT TARGET
-				DPRINTF("PARTICLE CHOSEN: %d   ALTITUDE: %d   %f BY %f RATIO: %f  OFFSET: %f\r", particle_id,target->center_mass_y,TARGET_WIDTH,TARGET_HEIGHT, ar, TARGET_OFFSET );
-				
-				VALID_IMAGE = 1;//tell everyone we have a target
-				
-				proxy->set("VALID_IMAGE",VALID_IMAGE);
-				proxy->set("TARGETOFFSET",TARGET_OFFSET);
+				//DELETE IMAGES STUFF TO AVOID ANGRY ROBOTS, VERRYYY IMPORTANT
+				delete reports;
+				delete filteredImage;
+				delete convexHullImage;
+				delete bigObjectsImage;
+				delete thresholdImage;
+				delete image;
 			}
 			else
 			{
-				VALID_IMAGE = 0;//tell everyone we wont have an image
-				proxy->set("VALID_IMAGE",VALID_IMAGE);
-				
-				//USE FOR DEBUGGING WHETHER A TARGET IS RECONIZED AND COMIC RELIEF
-				//printf("DANGER WILL ROBINSON!DANGER!");
+				//USE FOR DEBUGGING WHETHER CAMERA IS GETTING AN IMAGE
+				//printf("Waiting for Image \r");	
 			}
-			
-		
-		
-		//DELETE IMAGES STUFF TO AVOID ANGRY ROBOTS, VERRYYY IMPORTANT
-		delete reports;
-		delete filteredImage;
-		delete convexHullImage;
-		delete bigObjectsImage;
-		delete thresholdImage;
-		delete image;
-		}
-		else
-		{
-			//USE FOR DEBUGGING WHETHER CAMERA IS GETTING AN IMAGE
-			//printf("Waiting for Image \r");	
 		}
 		
 		sl.PutOne();
 		
 		// Wait for our next lap
-		WaitForNextLoop();		
+		WaitForNextLoop();
 	}
 	return (0);
 	

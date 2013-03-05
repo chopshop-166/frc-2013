@@ -50,9 +50,6 @@ private:
 	Victor motorR2;
 	Victor motorR3;
 	
-	bool AutoDump1;
-	bool AutoDump2;
-	
 	//The "D" at the end incicates these variables are in Drive not Autonomous
 	float OffsetValue; // The offset of the goal in degrees, positive or negative, provided by camera
 	float FrontDistance;  // The distance the robot is from the wall, provided by distance sensor

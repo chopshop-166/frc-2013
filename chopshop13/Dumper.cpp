@@ -175,11 +175,8 @@ int Dumper166::Main(int a2, int a3, int a4, int a5,
 			first_transition = 1;
 		}
 		//Set us moving in the right direction
-		//We want manual control apparently
-		if(proxy->get("joy3b5")){
-			RotateSpeed = proxy->get("joy3y");
 		//If we are going to storage and not there, go to it
-		} else if((TargetPosition == kStorage) && (BottomLimit.Get() == 0)) {
+		if((TargetPosition == kStorage) && (BottomLimit.Get() == 0)) {
 			RotateSpeed = -ROTATE_SPEED;
 		//Going to storage and there, stop moving
 		} else if ((TargetPosition == kStorage) && (BottomLimit.Get() == 1)) {

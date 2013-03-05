@@ -33,5 +33,6 @@ public:
 	float MAX_SONAR_DIST;
 	float GyroAngle;
 	float GyroOffset;
+	int backup_count;
 	int wait_count;
 };

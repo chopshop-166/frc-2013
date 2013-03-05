@@ -120,7 +120,7 @@ int Clutch166::Main(int a2, int a3, int a4, int a5,
 	while (true) {
 		clutch_btnl=proxy->get(JOY_LEFT_ENGAGE);
 		clutch_btnr=proxy->get(JOY_RIGHT_ENGAGE);
-		if(clutch_btnr||clutch_btnl == 1)
+		if((clutch_btnr == 1)||(clutch_btnl == 1))
 		{
 			if(clutch->Get()==0)
 			{
