@@ -10,7 +10,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "WPILib.h"
-#include "Clutch.h"
+#include "Climber.h"
 
 // To locally enable debug printing: set true, to disable false
 #define DPRINTF if(false)dprintf
@@ -85,7 +85,7 @@ Clutch166::Clutch166(void)
 {
 	Start((char *)"166ClutchTask", Clutch_CYCLE_TIME);
 	// ^^^ Rename those ^^^
-	clutch= new Solenoid(CLUTCH_PISTON);//FIGURE OUT WHICH PORT THIS SHOULD ACUTALLY BE!!!
+	climber= new DoubleSolenoid(CLIMBER_OUT,CLIMBER_IN);//FIGURE OUT WHICH PORT THIS SHOULD ACUTALLY BE!!!
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
@@ -117,18 +117,19 @@ int Clutch166::Main(int a2, int a3, int a4, int a5,
 	// General main loop (while in Autonomous or Tele mode)
 	proxy->TrackNewpress(JOY_LEFT_TRACK);
 	proxy->TrackNewpress(JOY_RIGHT_TRACK);
+	climber->Set(DoubleSolenoid::kReverse);
 	while (true) {
-		clutch_btnl=proxy->get(JOY_LEFT_ENGAGE);
-		clutch_btnr=proxy->get(JOY_RIGHT_ENGAGE);
-		if((clutch_btnr == 1)||(clutch_btnl == 1))
+		climber_btnl=proxy->get(JOY_LEFT_ENGAGE);
+		climber_btnr=proxy->get(JOY_RIGHT_ENGAGE);
+		if((climber_btnr == 1)||(climber_btnl == 1))
 		{
-			if(clutch->Get()==0)
+			if(climber->Get()==DoubleSolenoid::kForward)
 			{
-				clutch->Set(true);
+				climber->Set(DoubleSolenoid::kReverse);
 			}
 			else
 			{
-				clutch->Set(false);
+				climber->Set(DoubleSolenoid::kForward);
 			}
 		}
 		// Insert your own logic here

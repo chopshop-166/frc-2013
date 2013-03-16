@@ -124,10 +124,11 @@
 /////////////////////
 
 //Define Clutch Piston
-#define CLUTCH_PISTON (1)
+#define CLIMBER_OUT (1)
+#define CLIMBER_IN (2)
 //Define Dumper ejection piston
-#define DUMPER_PISTON_A (2)
-#define DUMPER_PISTON_B (3)
+#define DUMPER_PISTON_A (2) // Not used
+#define DUMPER_PISTON_B (3) // Not used
 
 /////////////////////////
 //TASK SPECIFIC DEFINES//

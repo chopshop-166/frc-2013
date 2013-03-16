@@ -42,8 +42,8 @@ private:
 	//Declare Proxy and Robot handles
 	Proxy *proxy;				// Handle to proxy
 	Robot *lHandle;            // Local handle
-	float clutch_btnl;	
-	float clutch_btnr;
+	float climber_btnl;	
+	float climber_btnr;
 	// Any variables that the task has as members go here
-	Solenoid *clutch;
+	DoubleSolenoid *climber;
 };
