@@ -31,6 +31,9 @@
 //Define Inclination managment motor
 #define TIM_ID (9)
 
+//Define Shooter motor
+#define SHOOTER_ID (10)
+
 ////////////////////
 //JOYSTICK DEFINES//
 ////////////////////
@@ -50,27 +53,30 @@
 
 
 //Control Position of Dumper
-#define JOY_COPILOT_ROTATE ("joy3y")
+#define JOY_COPILOT_ROTATE ("joy3y") //Not Used anymore
 
-#define JOY_COPILOT_STORE	("joy3b4n")
-#define JOY_COPILOT_STORE_TRACK	("joy3b4")
+#define JOY_COPILOT_STORE	("joy3b4n") //Not Used anymore
+#define JOY_COPILOT_STORE_TRACK	("joy3b4") //Not Used anymore
 
-#define JOY_COPILOT_LOAD	("joy3b2n")
-#define JOY_COPILOT_LOAD_TRACK	("joy3b2")
+#define JOY_COPILOT_LOAD	("joy3b2n") //Not Used anymore
+#define JOY_COPILOT_LOAD_TRACK	("joy3b2") //Not Used anymore
 
-#define JOY_COPILOT_DUMP	("joy3b3n")
-#define JOY_COPILOT_DUMP_TRACK	("joy3b3")
+#define JOY_COPILOT_DUMP	("joy3b3n") //Not Used anymore
+#define JOY_COPILOT_DUMP_TRACK	("joy3b3") //Not Used anymore
 
 
 //Auto dump activation
-#define JOY_AUTO_DUMP_1 ("joy1b1n")
-#define JOY_AUTO_DUMP_2 ("joy2b1n")
+#define JOY_AUTO_DUMP_1 ("joy1b1n") //Not Used anymore
+#define JOY_AUTO_DUMP_2 ("joy2b1n") //Not Used anymore
 
 //Frisbee eject trigger
 #define JOY_COPILOT_EJECT ("joy3b6")
 
 //TIM's joystick control
 #define JOYTIM_Y ("joy3y")
+
+//Set shooter speed
+#define SET_SHOOT_SPEED ("joy3b5")
 
 
 /////////////////
@@ -103,6 +109,8 @@
 #define RIGHT_ENCODER_B (6)
 #define LEFT_ENCODER_A (7)
 #define LEFT_ENCODER_B (8)
+#define SHOOTER_ENCODER_A (9)
+#define SHOOTER_ENCODER_B (10)
 
 //Define pressure switch
 #define PRESSURE_SWITCH (14)
@@ -155,5 +163,9 @@
 
 //Define for Robots current angle
 #define ROBOT_ANGLE ("Angle")
+
+//Defines for shooter
+#define PYRAMID_SHOOT_SPEED (2000)
+#define IDLESPEED (1500)
 
 
