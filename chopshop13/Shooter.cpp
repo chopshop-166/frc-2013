@@ -122,22 +122,61 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 	// Register our logger
 	lHandle = Robot::getInstance();
 	lHandle->RegisterLogger(&sl);
-	
+	ShooterEncoder.SetPIDSourceParameter(Encoder::kRate);
 	ShooterPID.Enable();
+	ShooterEncoder.Start();
+	proxy->TrackNewpress(SHOOT_SPEED_UP_TRACK);
+	proxy->TrackNewpress(SHOOT_SPEED_DOWN_TRACK);
+	
+	proxy->TrackNewpress("joy2b3");
+	proxy->TrackNewpress("joy2b4");
+	proxy->TrackNewpress("joy3b3");
+	proxy->TrackNewpress("joy3b4");
+	proxy->TrackNewpress("joy4b3");
+	proxy->TrackNewpress("joy4b4");
+	
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
 		// <<CHANGEME>>
 		// Insert your own logic here
+
 		
-		if(proxy->get(SET_SHOOT_SPEED) == 1){
-			ShooterSpeed = PYRAMID_SHOOT_SPEED;
+		if(proxy->get("joy2b3n")){
+			P = P + .01;
+			ShooterPID.SetPID(P, I, D);
 		}
-		else{
-			ShooterSpeed = IDLESPEED;
+		if(proxy->get("joy2b4n")){
+			P = P - .01;
+			ShooterPID.SetPID(P, I, D);
 		}
-	
+		if(proxy->get("joy3b3n")){
+			I = I + .01;
+			ShooterPID.SetPID(P, I, D);
+		}
+		if(proxy->get("joy3b4n")){
+			I = I - .01;
+			ShooterPID.SetPID(P, I, D);
+		}
+		if(proxy->get("joy4b3n")){
+			D = D + .01;
+			ShooterPID.SetPID(P, I, D);
+		}
+		if(proxy->get("joy4b4n")){
+			D = D - .01;
+			ShooterPID.SetPID(P, I, D);
+		}
 		
-		ShooterPID.SetSetpoint(ShooterSpeed);
+		
+		if(proxy->get(SHOOT_SPEED_UP)){
+			ShooterSpeed = ShooterSpeed + 50;
+		}
+		if(proxy->get(SHOOT_SPEED_DOWN)){
+			ShooterSpeed = ShooterSpeed - 50;
+		}
+		
+		ShooterPID.SetSetpoint(-ShooterSpeed);
+		
+		printf("TargetSpeed: %f RealSpeed: %f P: %f I: %f D: %f\r", ShooterSpeed, ShooterEncoder.GetRate(), P, I, D); 
 		
         // Logging any values
 		// <<CHANGEME>>

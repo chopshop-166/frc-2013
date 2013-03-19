@@ -10,5 +10,6 @@
 #include "FrontSonar.h"
 #include "Climber.h"
 #include "Gyro.h"
+#include "Shooter.h"
 #endif
 

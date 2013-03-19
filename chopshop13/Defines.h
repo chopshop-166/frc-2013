@@ -76,7 +76,11 @@
 #define JOYTIM_Y ("joy3y")
 
 //Set shooter speed
-#define SET_SHOOT_SPEED ("joy3b5")
+#define SHOOT_SPEED_DOWN_TRACK ("joy1b4")
+#define SHOOT_SPEED_UP_TRACK ("joy1b3")
+#define SHOOT_SPEED_UP ("joy1b3n")
+#define SHOOT_SPEED_DOWN ("joy1b4n")
+
 
 
 /////////////////
@@ -109,8 +113,8 @@
 #define RIGHT_ENCODER_B (6)
 #define LEFT_ENCODER_A (7)
 #define LEFT_ENCODER_B (8)
-#define SHOOTER_ENCODER_A (9)
-#define SHOOTER_ENCODER_B (10)
+#define SHOOTER_ENCODER_A (1)
+#define SHOOTER_ENCODER_B (2)
 
 //Define pressure switch
 #define PRESSURE_SWITCH (14)
