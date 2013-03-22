@@ -26,13 +26,13 @@
 #define MOTOR_R3_ID (6)
 
 //Define Dumper motors
-#define MOTOR_DUMPER_A (8)
+#define MOTOR_DUMPER_A (8) // Unused and depresssed, unfulfilled in life
 
 //Define Inclination managment motor
 #define TIM_ID (9)
 
 //Define Shooter motor
-#define SHOOTER_ID (10)
+#define SHOOTER_ID (8)
 
 ////////////////////
 //JOYSTICK DEFINES//
@@ -54,6 +54,7 @@
 
 //Control Position of Dumper
 #define JOY_COPILOT_ROTATE ("joy3y") //Not Used anymore
+#define JOY_COPILOT_DUMP ("joy3b8")
 
 #define JOY_COPILOT_STORE	("joy3b4n") //Not Used anymore
 #define JOY_COPILOT_STORE_TRACK	("joy3b4") //Not Used anymore
@@ -61,8 +62,8 @@
 #define JOY_COPILOT_LOAD	("joy3b2n") //Not Used anymore
 #define JOY_COPILOT_LOAD_TRACK	("joy3b2") //Not Used anymore
 
-#define JOY_COPILOT_DUMP	("joy3b3n") //Not Used anymore
-#define JOY_COPILOT_DUMP_TRACK	("joy3b3") //Not Used anymore
+#define JOY_COPILOT_FIRE	("joy3b3") 
+#define JOY_COPILOT_DUMP_TRACK	("joy3b5") //Not Used anymore
 
 
 //Auto dump activation
@@ -141,6 +142,8 @@
 //Define Dumper ejection piston
 #define DUMPER_PISTON_A (2) // Not used
 #define DUMPER_PISTON_B (3) // Not used
+
+#define SHOOTER_PISTON (2)
 
 /////////////////////////
 //TASK SPECIFIC DEFINES//

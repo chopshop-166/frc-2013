@@ -14,12 +14,15 @@
 #include "WPILib.h"
 #include "Robot.h"
 
+#define JOYINC (.00002)
+#define AVGSIZE (5)
+
 //
 // This constant defines how often we want this task to run in the form
 // of miliseconds. Max allowed time is 999 miliseconds.
 // You should rename this when you copy it into a new file
 // <<CHANGEME>>
-#define Shooter_CYCLE_TIME (10) // 10ms
+#define Shooter_CYCLE_TIME (50) // 10ms
 
 // Rename this, too, or you'll run into collisions
 // <<CHANGEME>>
@@ -49,15 +52,16 @@ int EncoderB; // Encoder channel B
 double P; // proportional value
 double I; // intergral value
 double D; // derivitave value
+double F; // feedforward
 
 float ShooterSpeed;
+bool PistonState;
 
 
 Victor ShooterVic;
 Encoder ShooterEncoder;
 
- 
 PIDController ShooterPID;
-
+Solenoid ShooterPiston;
 
 };
