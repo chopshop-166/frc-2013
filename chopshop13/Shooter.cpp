@@ -89,7 +89,7 @@ unsigned int ShooterLog::DumpBuffer(char *nptr, FILE *ofile)
 // task constructor
 Shooter166::Shooter166(void):
 	ShooterVic (SHOOTER_ID),
-	ShooterEncoder (SHOOTER_ENCODER_A, SHOOTER_ENCODER_B, true, Encoder::k4X),
+	ShooterEncoder (SHOOTER_ENCODER_A, SHOOTER_ENCODER_B, true, Encoder::k1X),
 	ShooterPID (P, I, D, F, &ShooterEncoder, &ShooterVic),
 	ShooterPiston(SHOOTER_PISTON)
 	
@@ -132,7 +132,19 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 	proxy->TrackNewpress(SHOOT_SPEED_UP_TRACK);
 	proxy->TrackNewpress(SHOOT_SPEED_DOWN_TRACK);
 	
-	ShooterSpeed = 8000;
+	ShooterSpeed = 11000;
+	P = 0.0009;
+	I = 0.00004;
+	D = 0;
+	F = 0.00005;
+	
+	/* Happy Values
+	   ShooterSpeed = 11000;
+	   P = 0.0009;
+	   I = 0.00004;
+	   D = 0;
+	   F = 0.00005;
+	 */
 	
 	proxy->TrackNewpress("joy2b3");
 	proxy->TrackNewpress("joy2b4");
@@ -210,7 +222,7 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 		
 		ShooterPID.SetSetpoint(-ShooterSpeed);
 		
-		printf("TargetSpeed: %f RealSpeed: %f P: %f I: %f D: %f F: %f\r", ShooterSpeed, shooter_distance, P, I, D, F); 
+		printf("SetPoint: %5.f AvgSpeed: %5.f RealSpeed: %.5f P: %f I: %f D: %f F: %f\r", ShooterSpeed, shooter_distance, ShooterEncoder.Get(), P, I, D, F); 
 		
 		//Firing the piston
         if(proxy->get(JOY_COPILOT_FIRE)){
