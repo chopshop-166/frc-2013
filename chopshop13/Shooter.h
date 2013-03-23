@@ -56,6 +56,9 @@ double F; // feedforward
 
 float ShooterSpeed;
 bool PistonState;
+float EncoderVal;
+
+float FilterDelta; // difference between current averaged value and new value
 
 
 Victor ShooterVic;

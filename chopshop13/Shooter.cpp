@@ -138,6 +138,8 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 	D = 0;
 	F = 0.00005;
 	
+	EncoderVal = 0;
+	
 	/* Happy Values
 	   ShooterSpeed = 11000;
 	   P = 0.0009;
@@ -157,18 +159,19 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 	
 	proxy->TrackNewpress(JOY_COPILOT_FIRE);
 	
-	float shooter_array[AVGSIZE];
+	float ShooterArray[AVGSIZE];
 		for (int i=0; i<AVGSIZE;i++) {//Use a rolling average to eliminate any temporary freaky readings from shooter
-			shooter_array[i]= 0;
+			ShooterArray[i]= 0;
 		}
 		int i = 0;
 		
-		float shooter_distance = 0;
+		float AvgSpeed = 0;
 	
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
 		
 		// Setting the PID values using joystick buttons
+		/*
 		if(proxy->get("joy2b3n")){
 			P = P + JOYINC;
 			ShooterPID.SetPID(P, I, D, F);
@@ -210,19 +213,30 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 		if(proxy->get(SHOOT_SPEED_DOWN)){
 			ShooterSpeed = ShooterSpeed - 50;
 		}
+		*/
+		EncoderVal = ShooterEncoder.GetRate();
+		
+		FilterDelta = AvgSpeed - EncoderVal;
 		
 		i++;
-		shooter_array[(i%AVGSIZE)] = ShooterEncoder.GetRate();
-		shooter_distance = 0;
+		if(FilterDelta > 2000){
+			EncoderVal = AvgSpeed - 0.05 * FilterDelta;
+			ShooterArray[(i%AVGSIZE)] = -EncoderVal;
+			AvgSpeed = 0;
+		}
+			else{
+				ShooterArray[(i%AVGSIZE)] = -EncoderVal;
+				AvgSpeed = 0;
+		}
 		
 		for(unsigned j = 0;j<AVGSIZE;j++) {
-				shooter_distance += shooter_array[j];
+				AvgSpeed += ShooterArray[j];
 		}
-		shooter_distance/=AVGSIZE;
+		AvgSpeed/=AVGSIZE;
 		
 		ShooterPID.SetSetpoint(-ShooterSpeed);
 		
-		printf("SetPoint: %5.f AvgSpeed: %5.f RealSpeed: %.5f P: %f I: %f D: %f F: %f\r", ShooterSpeed, shooter_distance, ShooterEncoder.Get(), P, I, D, F); 
+		printf("SetPoint: %5.f AvgSpeed: %5.f RealSpeed: %.5f P: %f I: %f D: %f F: %f\r", ShooterSpeed, AvgSpeed, ShooterEncoder.Get(), P, I, D, F); 
 		
 		//Firing the piston
         if(proxy->get(JOY_COPILOT_FIRE)){
