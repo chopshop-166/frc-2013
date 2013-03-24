@@ -98,7 +98,21 @@ Shooter166::Shooter166(void):
 	Start((char *)"166ShooterTask", Shooter_CYCLE_TIME);
 	// ^^^ Rename those ^^^
 	ShooterPID.SetOutputRange(-1, 0);
-	ShooterPID.SetInputRange(-13000, 0);
+	ShooterPID.SetInputRange(-20000, 0);
+	//Set start state waiting for input
+	state = WaitForGO;
+	//We aren't shooting at the beginning
+	shots_remaining = 0;
+	countdown = 0;
+	//Init Shooter Speed to its correct value
+	//Init PID values to their defaults
+	P = 0.0009;
+	I = 0.00004;
+	D = 0;
+	F = 0.00005;
+	ShooterPID.SetPID(P, I, D, F);
+	SetPoint = 0;
+	EncoderVal = 0;
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
@@ -131,14 +145,10 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 	ShooterEncoder.Start();
 	proxy->TrackNewpress(SHOOT_SPEED_UP_TRACK);
 	proxy->TrackNewpress(SHOOT_SPEED_DOWN_TRACK);
+	proxy->TrackNewpress(JOY_COPILOT_FIRE_AUTO_TRACK);
+	proxy->TrackNewpress(JOY_COPILOT_SPINUP_TRACK);
 	
-	ShooterSpeed = 11000;
-	P = 0.0009;
-	I = 0.00004;
-	D = 0;
-	F = 0.00005;
 	
-	EncoderVal = 0;
 	
 	/* Happy Values
 	   ShooterSpeed = 11000;
@@ -157,15 +167,14 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 	proxy->TrackNewpress("joy2b6");
 	proxy->TrackNewpress("joy2b7");
 	
-	proxy->TrackNewpress(JOY_COPILOT_FIRE);
-	
+	proxy->TrackNewpress(JOY_COPILOT_FIRE_AUTO_TRACK);
 	float ShooterArray[AVGSIZE];
-		for (int i=0; i<AVGSIZE;i++) {//Use a rolling average to eliminate any temporary freaky readings from shooter
-			ShooterArray[i]= 0;
-		}
-		int i = 0;
-		
-		float AvgSpeed = 0;
+	for (int i=0; i<AVGSIZE;i++) {//Use a rolling average to eliminate any temporary freaky readings from shooter
+		ShooterArray[i]= 0;
+	}
+	int i = 0;
+	
+	float AvgSpeed = 0;
 	
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
@@ -214,18 +223,21 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 			ShooterSpeed = ShooterSpeed - 50;
 		}
 		*/
-		EncoderVal = ShooterEncoder.GetRate();
+		//Average values read in
+		// Any value that is more than 2000 counts off from average
+		// Will be put in as .05 of the difference subtracted from the current average
+		EncoderVal = -ShooterEncoder.GetRate();
 		
 		FilterDelta = AvgSpeed - EncoderVal;
 		
 		i++;
-		if(FilterDelta > 2000){
+		if(FilterDelta > 3000){
 			EncoderVal = AvgSpeed - 0.05 * FilterDelta;
-			ShooterArray[(i%AVGSIZE)] = -EncoderVal;
+			ShooterArray[(i%AVGSIZE)] = EncoderVal;
 			AvgSpeed = 0;
 		}
 			else{
-				ShooterArray[(i%AVGSIZE)] = -EncoderVal;
+				ShooterArray[(i%AVGSIZE)] = EncoderVal;
 				AvgSpeed = 0;
 		}
 		
@@ -234,20 +246,92 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 		}
 		AvgSpeed/=AVGSIZE;
 		
-		ShooterPID.SetSetpoint(-ShooterSpeed);
+		//ShooterPID.SetSetpoint(-ShooterSpeed);
 		
-		printf("SetPoint: %5.f AvgSpeed: %5.f RealSpeed: %.5f P: %f I: %f D: %f F: %f\r", ShooterSpeed, AvgSpeed, ShooterEncoder.Get(), P, I, D, F); 
+		//printf("SetPoint: %5.f AvgSpeed: %5.f RealSpeed: %.5f P: %f I: %f D: %f F: %f\r"
+		//		, ShooterPID.GetSetpoint(), AvgSpeed, ShooterEncoder.GetRate(), P, I, D, F); 
 		
-		//Firing the piston
+		//Fire the piston no matter what
         if(proxy->get(JOY_COPILOT_FIRE)){
         	PistonState = true;
         } else{
-        		PistonState = false;
+        	PistonState = false;
+        }
+        
+        
+        //Automatically Fire
+        
+      
+      
+        switch (state) {
+        case WaitForGO:
+        	  if(proxy->get(JOY_COPILOT_FIRE_AUTO)) {
+        		  shots_remaining = 4;
+        		  state = StartShooter;
+        	  }
+        	//Wait until we actually need to spin
+        	break;
+        case StartShooter:
+        	//Check conditions
+        	if (SetPoint == 0) {
+        		state = SpinUp;
+        	} else {
+        		state = CheckTime;
+        		countdown = 0;
         	}
-        
+        	break;
+        case SpinUp:
+        	//We weren't spinning, lets start!
+        	SetPoint = -SHOOTSPEED;
+        	state = CheckTime;
+        	break;
+        case CheckTime:
+        	//Wait 1 Sec
+        	countdown++;
+        	if (countdown > 20) {
+        		state = CheckSpeed;
+        		countdown = 0;
+        	}
+        	break;
+        case CheckSpeed:
+        	//Are we at speed?
+        	if (AvgSpeed >= (.975*SHOOTSPEED)) {
+        		state = Fire;
+        	}
+        	break;
+        case Fire:
+        	//Extend Piston, fire frisbee
+        	countdown++;
+        	PistonState = 1;
+        	if (countdown > 20) {
+        		state = Retract;
+        	}
+        	break;
+        case Retract:
+        	//Bring the piston back in
+        	PistonState = 0;
+        	shots_remaining--;
+        	state = IsDone;
+        	break;
+        case IsDone:
+        	//We're done, Spin down
+        	if(shots_remaining == 0) {
+        		SetPoint = 0;
+        		state = WaitForGO;
+        	} else {
+        		state = StartShooter;
+        	}
+        }
         ShooterPiston.Set(PistonState);
-        
-		// <<CHANGEME>>
+        //Spinup shooter
+        if ((proxy->get(JOY_COPILOT_SPINUP)) && (SetPoint == 0)) {
+        	SetPoint = -SHOOTSPEED;
+        } else if (proxy->get(JOY_COPILOT_SPINUP)) {
+        	SetPoint = 0;
+        }
+        ShooterPID.SetSetpoint(SetPoint);
+        printf("SetPoint %5.f Speed %5.f State: %d\r", SetPoint, ShooterEncoder.GetRate(), state);
+        // <<CHANGEME>>
 		// Make this match the declaraction above
 		sl.PutOne();
 		

@@ -42,39 +42,24 @@
 #define JOY_LEFT_Y  ("joy1y")
 #define JOY_RIGHT_Y ("joy2y")
 
-//Define for Xbox
-//#define JOY_RIGHT_Y ("joy1A5")
-
-//Engage Clutch
+//Defines for Climbing System
 #define JOY_LEFT_ENGAGE ("joy1b3n")
 #define JOY_RIGHT_ENGAGE ("joy2b3n")
 #define JOY_LEFT_TRACK ("joy1b3")
 #define JOY_RIGHT_TRACK ("joy2b3")
 
+//Fire Frisbee regardless
+#define JOY_COPILOT_FIRE	("joy3b3")
 
-//Control Position of Dumper
-#define JOY_COPILOT_ROTATE ("joy3y") //Not Used anymore
-#define JOY_COPILOT_DUMP ("joy3b8")
+//Fire Frisbees automatically
+#define JOY_COPILOT_FIRE_AUTO ("joy3b8n")
+#define JOY_COPILOT_FIRE_AUTO_TRACK ("joy3b8")
 
-#define JOY_COPILOT_STORE	("joy3b4n") //Not Used anymore
-#define JOY_COPILOT_STORE_TRACK	("joy3b4") //Not Used anymore
+//Spinup the shooter
+#define JOY_COPILOT_SPINUP 	("joy3b5n")
+//Track Spinup button
+#define JOY_COPILOT_SPINUP_TRACK ("joy3b5")
 
-#define JOY_COPILOT_LOAD	("joy3b2n") //Not Used anymore
-#define JOY_COPILOT_LOAD_TRACK	("joy3b2") //Not Used anymore
-
-#define JOY_COPILOT_FIRE	("joy3b3") 
-#define JOY_COPILOT_DUMP_TRACK	("joy3b5") //Not Used anymore
-
-
-//Auto dump activation
-#define JOY_AUTO_DUMP_1 ("joy1b1n") //Not Used anymore
-#define JOY_AUTO_DUMP_2 ("joy2b1n") //Not Used anymore
-
-//Frisbee eject trigger
-#define JOY_COPILOT_EJECT ("joy3b6")
-
-//TIM's joystick control
-#define JOYTIM_Y ("joy3y")
 
 //Set shooter speed
 #define SHOOT_SPEED_DOWN_TRACK ("joy1b4")

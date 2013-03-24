@@ -23,7 +23,7 @@
 // You should rename this when you copy it into a new file
 // <<CHANGEME>>
 #define Shooter_CYCLE_TIME (50) // 10ms
-
+#define SHOOTSPEED (17000)
 // Rename this, too, or you'll run into collisions
 // <<CHANGEME>>
 class Shooter166 : public Team166Task
@@ -46,25 +46,29 @@ private:
 	Proxy *proxy;				// Handle to proxy
 	Robot *lHandle;            // Local handle
 	
-int EncoderA; // Encoder channel A
-int EncoderB; // Encoder channel B
+	int EncoderA; // Encoder channel A
+	int EncoderB; // Encoder channel B
+	
+	double P; // proportional value
+	double I; // intergral value
+	double D; // derivitave value
+	double F; // feedforward
+	
+	float ShooterSpeed;
+	bool PistonState;
+	float EncoderVal;
+	
+	float SetPoint;
+	
+	float FilterDelta; // difference between current averaged value and new value
+	
+	Victor ShooterVic;
+	Encoder ShooterEncoder;
+	
+	PIDController ShooterPID;
+	Solenoid ShooterPiston;
 
-double P; // proportional value
-double I; // intergral value
-double D; // derivitave value
-double F; // feedforward
-
-float ShooterSpeed;
-bool PistonState;
-float EncoderVal;
-
-float FilterDelta; // difference between current averaged value and new value
-
-
-Victor ShooterVic;
-Encoder ShooterEncoder;
-
-PIDController ShooterPID;
-Solenoid ShooterPiston;
-
+	enum {WaitForGO, StartShooter, SpinUp, CheckTime, CheckSpeed, Fire, Retract,IsDone} state;
+	int shots_remaining;
+	int countdown;
 };

@@ -33,6 +33,8 @@ AutonomousTask::AutonomousTask() {
 	}
 	
 	while( lHandle->IsAutonomous() ) {
+		proxy->set(JOY_COPILOT_FIRE_AUTO_TRACK,1);
+		/*
 		GyroAngle = proxy->get("GYROANGLE");
 		OffsetValue = proxy->get ("TargetOffset"); //Get the offset of the target from the center of the target(camera)
 		SonarDistance = proxy->get ("Sonar_Distance");//Get output from sonar sensor
@@ -40,7 +42,7 @@ AutonomousTask::AutonomousTask() {
 		
 		//USE THIS PRINTF TO DEBUG ALL OF AUTO.
 		//printf("State: %d  Offset: %f Image: %d Distance: %f Gain: %f\r", state, OffsetValue, Valid_Image, SonarDistance,DRIVE2_GAIN);
-		
+	
 		switch(state){
 	           case INIT: 
 	        	   wait_count = 0;
@@ -188,9 +190,10 @@ AutonomousTask::AutonomousTask() {
 				 proxy->set(JOY_RIGHT_Y,0);
 			   }
 			   break;
+			   
 	}
         	   
-
+		*/
 		Wait(AUTONOMOUS_WAIT_TIME);
 		proxy->set("AUTO_STATE",state);
 	}
