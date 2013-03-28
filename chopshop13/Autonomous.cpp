@@ -31,13 +31,13 @@ AutonomousTask::AutonomousTask() {
 	}
 	
 	while( lHandle->IsAutonomous() ) {
-		proxy->set(JOY_COPILOT_FIRE_AUTO_TRACK,1);
+		proxy->set(JOY_COPILOT_FIRE_AUTO , 1);
 		if (wait_count >= 50) {
-			proxy->set(JOY_COPILOT_FIRE_AUTO_TRACK,0);
+			proxy->set(JOY_COPILOT_FIRE_AUTO,0);
 		} else if (wait_count >= 30) {
-			proxy->set(JOY_COPILOT_FIRE_AUTO_TRACK,1);
+			proxy->set(JOY_COPILOT_FIRE_AUTO,1);
 		} else if (wait_count >= 20) {
-			proxy->set(JOY_COPILOT_FIRE_AUTO_TRACK,0);
+			proxy->set(JOY_COPILOT_FIRE_AUTO,0);
 		}
 		wait_count++;
 		Wait(AUTONOMOUS_WAIT_TIME);

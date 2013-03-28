@@ -49,16 +49,15 @@
 #define JOY_RIGHT_TRACK ("joy2b3")
 
 //Fire Frisbee regardless
-#define JOY_COPILOT_FIRE	("joy3b3")
+#define JOY_COPILOT_FIRE	("joy3b6")
 
 //Fire Frisbees automatically
-#define JOY_COPILOT_FIRE_AUTO ("joy3b8n")
-#define JOY_COPILOT_FIRE_AUTO_TRACK ("joy3b8")
+#define JOY_COPILOT_FIRE_AUTO ("joy3z")
 
 //Spinup the shooter
-#define JOY_COPILOT_SPINUP 	("joy3b5n")
+#define JOY_COPILOT_SPINUP 	("joy3b1n")
 //Track Spinup button
-#define JOY_COPILOT_SPINUP_TRACK ("joy3b5")
+#define JOY_COPILOT_SPINUP_TRACK ("joy3b1")
 
 
 //Set shooter speed

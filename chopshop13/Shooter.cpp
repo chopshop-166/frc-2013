@@ -145,7 +145,6 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 	ShooterEncoder.Start();
 	proxy->TrackNewpress(SHOOT_SPEED_UP_TRACK);
 	proxy->TrackNewpress(SHOOT_SPEED_DOWN_TRACK);
-	proxy->TrackNewpress(JOY_COPILOT_FIRE_AUTO_TRACK);
 	proxy->TrackNewpress(JOY_COPILOT_SPINUP_TRACK);
 	
 	
@@ -167,7 +166,6 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 	proxy->TrackNewpress("joy2b6");
 	proxy->TrackNewpress("joy2b7");
 	
-	proxy->TrackNewpress(JOY_COPILOT_FIRE_AUTO_TRACK);
 	float ShooterArray[AVGSIZE];
 	for (int i=0; i<AVGSIZE;i++) {//Use a rolling average to eliminate any temporary freaky readings from shooter
 		ShooterArray[i]= 0;
@@ -265,7 +263,7 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
       
         switch (state) {
         case WaitForGO:
-        	  if(proxy->get(JOY_COPILOT_FIRE_AUTO)) {
+        	  if(proxy->get(JOY_COPILOT_FIRE_AUTO) > .1) {
         		  shots_remaining = 4;
         		  state = StartShooter;
         	  }
