@@ -109,10 +109,11 @@ Shooter166::Shooter166(void):
 	P = 0.0009;
 	I = 0.00004;
 	D = 0;
-	F = 0.00005;
+	F = 0.00003;
 	ShooterPID.SetPID(P, I, D, F);
 	SetPoint = 0;
 	EncoderVal = 0;
+	PistonCount = 0;
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
@@ -156,16 +157,14 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 	   D = 0;
 	   F = 0.00005;
 	 */
-	
-	proxy->TrackNewpress("joy2b3");
+	/*
+	proxy->TrackNewpress("joy1b4");
+	proxy->TrackNewpress("joy1b5");
 	proxy->TrackNewpress("joy2b4");
-	proxy->TrackNewpress("joy3b3");
-	proxy->TrackNewpress("joy3b4");
-	proxy->TrackNewpress("joy4b3");
-	proxy->TrackNewpress("joy4b4");
-	proxy->TrackNewpress("joy2b6");
-	proxy->TrackNewpress("joy2b7");
-	
+	proxy->TrackNewpress("joy2b5");
+	proxy->TrackNewpress("joy2b8");
+	proxy->TrackNewpress("joy2b9");
+	*/
 	float ShooterArray[AVGSIZE];
 	for (int i=0; i<AVGSIZE;i++) {//Use a rolling average to eliminate any temporary freaky readings from shooter
 		ShooterArray[i]= 0;
@@ -179,39 +178,30 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 		
 		// Setting the PID values using joystick buttons
 		/*
-		if(proxy->get("joy2b3n")){
+		if(proxy->get("joy1b4n")){
 			P = P + JOYINC;
 			ShooterPID.SetPID(P, I, D, F);
 		}
-		if(proxy->get("joy2b4n")){
+		if(proxy->get("joy1b5n")){
 			P = P - JOYINC;
 			ShooterPID.SetPID(P, I, D, F);
 		}
-		if(proxy->get("joy3b3n")){
+		if(proxy->get("joy2b4n")){
 			I = I + JOYINC;
 			ShooterPID.SetPID(P, I, D, F);
 		}
-		if(proxy->get("joy3b4n")){
+		if(proxy->get("joy2b5n")){
 			I = I - JOYINC;
 			ShooterPID.SetPID(P, I, D, F);
 		}
-		if(proxy->get("joy4b3n")){
-			D = D + JOYINC;
-			ShooterPID.SetPID(P, I, D, F);
-		}
-		if(proxy->get("joy4b4n")){
-			D = D - JOYINC;
-			ShooterPID.SetPID(P, I, D, F);
-		}
-		if(proxy->get("joy2b6n")){
+		if(proxy->get("joy2b8n")){
 			F = F + .00001;
 			ShooterPID.SetPID(P, I, D, F);
 		}
-		if(proxy->get("joy2b7n")){
+		if(proxy->get("joy2b9n")){
 			F = F - .00001;
 			ShooterPID.SetPID(P, I, D, F);
 		}
-		
 		
 		// Setting setpoint using buttons
 		if(proxy->get(SHOOT_SPEED_UP)){
@@ -252,18 +242,16 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
 		//Fire the piston no matter what
         if(proxy->get(JOY_COPILOT_FIRE)){
         	PistonState = true;
-        } else{
-        	PistonState = false;
-        }
-        
+       	} else {
+       		PistonState = false;
+       	}
+
         
         //Automatically Fire
-        
-      
       
         switch (state) {
         case WaitForGO:
-        	  if(proxy->get(JOY_COPILOT_FIRE_AUTO) > .1) {
+        	  if(proxy->get(JOY_COPILOT_FIRE_AUTO) < -.1) {
         		  shots_remaining = 4;
         		  state = StartShooter;
         	  }
@@ -301,7 +289,7 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
         	//Extend Piston, fire frisbee
         	countdown++;
         	PistonState = 1;
-        	if (countdown > 20) {
+        	if (countdown > 5) {
         		state = Retract;
         	}
         	break;
@@ -320,15 +308,17 @@ int Shooter166::Main(int a2, int a3, int a4, int a5,
         		state = StartShooter;
         	}
         }
-        ShooterPiston.Set(PistonState);
+    	ShooterPiston.Set(PistonState);
+        
         //Spinup shooter
         if ((proxy->get(JOY_COPILOT_SPINUP)) && (SetPoint == 0)) {
         	SetPoint = -SHOOTSPEED;
         } else if (proxy->get(JOY_COPILOT_SPINUP)) {
         	SetPoint = 0;
         }
+        printf("GO: %f",proxy->get(JOY_COPILOT_FIRE_AUTO));
         ShooterPID.SetSetpoint(SetPoint);
-        printf("SetPoint %5.f Speed %5.f State: %d\r", SetPoint, ShooterEncoder.GetRate(), state);
+        //printf("SetPoint %5.f Speed %5.f State: %d\r", SetPoint, ShooterEncoder.GetRate(), state);
         // <<CHANGEME>>
 		// Make this match the declaraction above
 		sl.PutOne();

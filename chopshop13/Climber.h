@@ -23,16 +23,16 @@
 
 // Rename this, too, or you'll run into collisions
 // <<CHANGEME>>
-class Clutch166 : public Team166Task
+class Climber166 : public Team166Task
 {
 	
 public:
 	
 	// task constructor
-	Clutch166(void);
+	Climber166(void);
 
 	// task destructor
-	virtual ~Clutch166(void);
+	virtual ~Climber166(void);
 
 	// Main function of the task
 	virtual int Main(int a2, int a3, int a4, int a5,

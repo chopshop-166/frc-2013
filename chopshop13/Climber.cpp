@@ -81,24 +81,25 @@ unsigned int ClutchLog::DumpBuffer(char *nptr, FILE *ofile)
 
 
 // task constructor
-Clutch166::Clutch166(void)
+Climber166::Climber166(void)
 {
-	Start((char *)"166ClutchTask", Clutch_CYCLE_TIME);
+	Start((char *)"166ClimberTask", Clutch_CYCLE_TIME);
 	// ^^^ Rename those ^^^
 	climber= new DoubleSolenoid(CLIMBER_OUT,CLIMBER_IN);//FIGURE OUT WHICH PORT THIS SHOULD ACUTALLY BE!!!
+	climber->Set(DoubleSolenoid::kForward);
 	// Register the proxy
 	proxy = Proxy::getInstance();
 	return;
 };
 	
 // task destructor
-Clutch166::~Clutch166(void)
+Climber166::~Climber166(void)
 {
 	return;
 };
 	
 // Main function of the task
-int Clutch166::Main(int a2, int a3, int a4, int a5,
+int Climber166::Main(int a2, int a3, int a4, int a5,
 			int a6, int a7, int a8, int a9, int a10)
 {
 	ClutchLog sl;                   // log
@@ -116,12 +117,10 @@ int Clutch166::Main(int a2, int a3, int a4, int a5,
 	
 	// General main loop (while in Autonomous or Tele mode)
 	proxy->TrackNewpress(JOY_LEFT_TRACK);
-	proxy->TrackNewpress(JOY_RIGHT_TRACK);
-	climber->Set(DoubleSolenoid::kReverse);
 	while (true) {
-		climber_btnl=proxy->get(JOY_LEFT_ENGAGE);
-		climber_btnr=proxy->get(JOY_RIGHT_ENGAGE);
-		if((climber_btnr == 1)||(climber_btnl == 1))
+		
+		printf("Climbing: %f\r",proxy->get(JOY_LEFT_ENGAGE));
+		if(proxy->get(JOY_LEFT_ENGAGE) == 1.0)
 		{
 			if(climber->Get()==DoubleSolenoid::kForward)
 			{

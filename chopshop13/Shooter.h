@@ -23,7 +23,7 @@
 // You should rename this when you copy it into a new file
 // <<CHANGEME>>
 #define Shooter_CYCLE_TIME (50) // 10ms
-#define SHOOTSPEED (17000)
+#define SHOOTSPEED (15000)
 // Rename this, too, or you'll run into collisions
 // <<CHANGEME>>
 class Shooter166 : public Team166Task
@@ -71,4 +71,5 @@ private:
 	enum {WaitForGO, StartShooter, SpinUp, CheckTime, CheckSpeed, Fire, Retract,IsDone} state;
 	int shots_remaining;
 	int countdown;
+	int PistonCount;
 };

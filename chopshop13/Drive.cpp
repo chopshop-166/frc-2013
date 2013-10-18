@@ -130,37 +130,9 @@ int Drive::Main(int a2, int a3, int a4, int a5,
 	float joyrighty = 0;
     // General main loop (while in Autonomous or Tele mode)
 	while (true) {
-		
-		OffsetValue = proxy->get ("TargetOffset"); //Get the offset of the target from the center of the target(camera)
-		SonarDistance = proxy->get ("Sonar_Distance");//Get output from sonar sensor
-		Valid_Image = int(proxy->get("Valid_Image"));//Get whether the camera has a valid target
-		DRIVE2_GAIN = min((SonarDistance - DUMP_DISTANCE)/ 48.0,1.0);
-
 		//printf("Distance: %f", SonarDistance);
-		
-		if((proxy->get("joy1b1")==1) || (proxy->get("joy2b1")==1)){	
-			if (SonarDistance > DUMP_DISTANCE)
-			{
-				if (Valid_Image == 0)
-				{
-					AlignSpeed = 0;
-					joylefty = -AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED);
-					joyrighty = AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED);
-				}
-				else
-				{
-					AlignSpeed = OffsetValue * ALIGN_SPEED_CONST; //Speed the robot aligns at, proportional
-					joylefty =  -AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED);
-					joyrighty =  AlignSpeed - max(FORWARD_SPEED * DRIVE2_GAIN,MIN_SPEED);
-				}
-			} else {
-				joylefty = 0.0;
-				joyrighty = 0.0;
-			}
-		} else {
-			joylefty = proxy->get(JOY_LEFT_Y);
-			joyrighty = proxy->get(JOY_RIGHT_Y);
-		}
+		joylefty = proxy->get(JOY_LEFT_Y);
+		joyrighty = proxy->get(JOY_RIGHT_Y);
 		
 		motorL1.Set(joylefty);
 		motorL2.Set(joylefty);
